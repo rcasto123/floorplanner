@@ -23,25 +23,26 @@
   --purple: #8546CC;
   --orange: #F18424;
   --pink: #D4418A;
-  
+
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --font-body: system-ui, -apple-system, sans-serif;
   --font-display: Georgia, serif;
-  
+
   --canvas-bg: #0A1F1D;
 }
 
 html.light-mode {
   --bg: #FAFBFD;
   --surface: #FFFFFF;
-  --surface2: #F3F7F6;
+  --surface2: #F0F5F3;
   --border: #E5EAE9;
   --text: #002620;
   --text-dim: #3D6B65;
   --text-muted: #749E98;
   --accent: #008F6D;
   --accent-hover: #056A52;
-  --canvas-bg: #F0F5F3;
+  --bright-green: #00A67E;
+  --canvas-bg: #F5F8F7;
 }
 
 * {
@@ -61,7 +62,7 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* ─── Header ─── */
+/* ── Header ── */
 header {
   background: var(--surface);
   color: var(--text);
@@ -76,6 +77,9 @@ header {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-display);
   font-size: 20px;
   color: var(--text);
@@ -92,6 +96,109 @@ header {
   color: var(--text-muted);
   font-family: var(--font-mono);
   margin-left: 4px;
+}
+
+.aircall-logo-mark {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.office-dropdown {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 24px 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.office-dropdown:hover {
+  background: var(--border);
+}
+
+.office-dropdown::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.office-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  min-width: 250px;
+  margin-top: 4px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.office-dropdown-menu.hidden {
+  display: none;
+}
+
+.office-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.office-dropdown-item:hover {
+  background: rgba(0, 143, 109, 0.1);
+}
+
+.office-dropdown-item.active {
+  background: rgba(0, 143, 109, 0.25);
+}
+
+.office-item-label {
+  flex: 1;
+}
+
+.office-item-count {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.office-dropdown-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.office-new-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--bright-green);
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.office-new-item:hover {
+  background: rgba(76, 229, 193, 0.15);
 }
 
 .stat-pills {
@@ -154,7 +261,7 @@ header {
   display: inline;
 }
 
-/* ─── Tabs ─── */
+/* ── Tabs ── */
 .view-tabs {
   display: flex;
   background: var(--surface);
@@ -185,7 +292,7 @@ header {
   border-bottom-color: var(--accent);
 }
 
-/* ─── Controls bar ─── */
+/* ── Controls bar ── */
 .controls {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -280,7 +387,7 @@ header {
   font-family: var(--font-mono);
 }
 
-/* ─── Edit toolbar ─── */
+/* ── Edit toolbar ── */
 #editToolbar {
   background: rgba(0, 143, 109, 0.08);
   border-bottom: 1px solid var(--border);
@@ -403,7 +510,7 @@ header {
   text-align: center;
 }
 
-/* ─── App body ─── */
+/* ── App body ── */
 .app-body {
   display: flex;
   flex: 1;
@@ -421,7 +528,7 @@ header {
   display: flex;
 }
 
-/* ─── MAP view ─── */
+/* ── MAP view ── */
 #map-view {
   flex-direction: row;
 }
@@ -627,7 +734,7 @@ header {
   stroke-width: 1;
 }
 
-/* ─── ROSTER view ─── */
+/* ── ROSTER view ── */
 #roster-view {
   flex-direction: column;
 }
@@ -663,7 +770,7 @@ header {
 
 .roster-table td {
   padding: 6px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border);
   color: var(--text);
 }
 
@@ -698,7 +805,7 @@ header {
   font-weight: 600;
 }
 
-/* ─── Modal & Panels ─── */
+/* ── Modal & Panels ── */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -846,7 +953,7 @@ header {
   color: #fff;
 }
 
-/* ─── Side panel ─── */
+/* ── Side panel ── */
 #sidePanel {
   position: absolute;
   right: 0;
@@ -924,7 +1031,7 @@ header {
   font-size: 10px;
 }
 
-/* ─── Scrollbars ─── */
+/* ── Scrollbars ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -961,7 +1068,23 @@ kbd {
 <body>
 
 <header>
-  <div class="logo">Floor<em>Craft</em><span class="logo-subtitle">by Aircall</span></div>
+  <div class="logo">
+    <svg class="aircall-logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="15" y="30" width="20" height="40" rx="4" fill="#008F6D"/>
+      <rect x="40" y="20" width="20" height="50" rx="4" fill="#008F6D"/>
+      <rect x="65" y="35" width="20" height="35" rx="4" fill="#008F6D"/>
+    </svg>
+    Floor<em>Craft</em><span class="logo-subtitle">by Aircall</span>
+  </div>
+
+  <button class="office-dropdown" id="officeDropdown">🏢 New Office ▾</button>
+
+  <div class="office-dropdown-menu hidden" id="officeMenu">
+    <div id="officeList"></div>
+    <div class="office-dropdown-sep"></div>
+    <div class="office-new-item" id="newOfficeBtn">+ New Office...</div>
+  </div>
+
   <div class="stat-pills">
     <div class="stat-pill">Desks: <b id="deskCount">0</b></div>
     <div class="stat-pill">People: <b id="peopleCount">0</b></div>
@@ -994,119 +1117,77 @@ kbd {
     <button class="eb eb-neutral" id="btnUndo" disabled>↶ Undo</button>
     <button class="eb eb-neutral" id="btnRedo" disabled>↷ Redo</button>
     <button class="eb eb-neutral" id="btnAddDesk">+ Desk</button>
-    <button class="eb eb-neutral" id="btnAddTable">⭕ Table</button>
+    <button class="eb eb-neutral" id="btnAddTable">⬤ Table</button>
     <button class="eb eb-neutral" id="btnDrawWall">✏ Wall</button>
     <button class="eb eb-neutral" id="btnAddText">T Text</button>
-    <button class="eb eb-neutral" id="btnAddVertex">+ Vertex</button>
-    <div class="et-sep"></div>
-    <button class="eb eb-neutral" id="btnGrid">Grid</button>
-    <button class="eb eb-warn" id="btnDelete" disabled>Delete</button>
-  </div>
-  <div class="et-row">
+    <button class="eb eb-neutral" id="btnDeleteSel">🗑 Delete</button>
+    <button class="eb eb-neutral" id="btnVertexMode">⬟ Edit Vertex</button>
     <div id="alignRow">
-      <button class="eb eb-align" id="btnAlignL">L</button>
-      <button class="eb eb-align" id="btnAlignCX">CX</button>
-      <button class="eb eb-align" id="btnAlignR">R</button>
-      <button class="eb eb-align" id="btnAlignT">T</button>
-      <button class="eb eb-align" id="btnAlignCY">CY</button>
-      <button class="eb eb-align" id="btnAlignB">B</button>
-      <span class="et-hint">Align selected</span>
+      <button class="eb" id="btnAlignL" title="Align Left">⬅</button>
+      <button class="eb" id="btnAlignH" title="Align Horizontal">↔</button>
+      <button class="eb" id="btnAlignR" title="Align Right">➡</button>
+      <span class="et-sep"></span>
+      <button class="eb" id="btnAlignT" title="Align Top">⬆</button>
+      <button class="eb" id="btnAlignV" title="Align Vertical">↕</button>
+      <button class="eb" id="btnAlignB" title="Align Bottom">⬇</button>
+      <span class="et-sep"></span>
+      <label style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-left:4px;"><input type="checkbox" id="gridSnap" /> GRID</label>
     </div>
-    <div class="spacer"></div>
-    <div class="et-sep"></div>
-    <button class="eb eb-neutral" id="btnExportJSON" title="Export layout as JSON">⬇ JSON</button>
-    <button class="eb eb-neutral" id="btnImportJSON" title="Import layout from JSON">⬆ JSON</button>
-    <input type="file" id="jsonFileInput" accept=".json" style="display:none">
-    <button class="eb eb-neutral" id="btnExportPNG" title="Export floor plan as PNG">📷 PNG</button>
-    <div class="et-sep"></div>
-    <div class="zoom-ctrl">
-      <button class="eb eb-neutral" id="btnZoomOut">−</button>
-      <span class="zoom-pct" id="zoomPct">100%</span>
-      <button class="eb eb-neutral" id="btnZoomIn">+</button>
-    </div>
+    <span class="et-sep"></span>
+    <span class="zoom-ctrl">
+      <button class="eb" id="btnZoomOut" style="padding:4px 8px;">−</button>
+      <div class="zoom-pct" id="zoomPct">100%</div>
+      <button class="eb" id="btnZoomIn" style="padding:4px 8px;">+</button>
+    </span>
+    <button class="eb eb-neutral" id="btnResetLayout">Reset</button>
+    <button class="eb eb-neutral" id="btnExportJSON">Export</button>
+    <button class="eb eb-neutral" id="btnImportJSON">Import</button>
   </div>
-</div>
-
-<!-- Keyboard Shortcut Overlay -->
-<div class="modal-backdrop" id="shortcutOverlay" style="display:none">
-  <div class="modal" style="max-width:560px">
-    <div class="modal-header">
-      <div class="modal-title">Keyboard Shortcuts</div>
-      <button class="modal-close" onclick="document.getElementById('shortcutOverlay').style.display='none'">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:16px;font-size:12px;line-height:2;font-family:var(--font-mono);">
-      <div style="margin-bottom:12px;font-weight:600;color:var(--accent);">Navigation</div>
-      <div><kbd>Space + Drag</kbd> — Pan the canvas</div>
-      <div><kbd>Scroll Wheel</kbd> — Zoom in/out</div>
-      <div><kbd>E</kbd> — Toggle edit mode</div>
-      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">Editing</div>
-      <div><kbd>Ctrl+Z</kbd> — Undo</div>
-      <div><kbd>Ctrl+Y</kbd> — Redo</div>
-      <div><kbd>Delete</kbd> — Delete selected</div>
-      <div><kbd>G</kbd> — Toggle grid snap</div>
-      <div><kbd>Arrow Keys</kbd> — Nudge selected (Shift = 10px)</div>
-      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">Selection</div>
-      <div><kbd>Shift + Click</kbd> — Multi-select</div>
-      <div><kbd>Click + Drag</kbd> — Rubber band select</div>
-      <div><kbd>Escape</kbd> — Clear selection / cancel tool</div>
-      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">General</div>
-      <div><kbd>?</kbd> — Show this overlay</div>
-    </div>
+  <div class="et-row" style="display:none;">
+    <span class="et-hint">TIP: Press <span class="key">Space</span> + drag to pan. Use <span class="key">Scroll</span> to zoom.</span>
   </div>
 </div>
 
 <div class="app-body">
   <div id="map-view" class="view-panel active">
-    <div class="symbol-panel" id="symbolPanel">
+    <div class="symbol-panel">
       <div class="symbol-header">Symbols</div>
       <div class="symbol-list" id="symbolList"></div>
     </div>
     <div class="floor-wrap">
-      <svg id="floor-svg" data-width="500" data-height="300"></svg>
+      <svg id="floor-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="sidePanel">
+        <div class="panel-header">
+          <div class="panel-title" id="panelTitle"></div>
+          <button class="panel-close" id="panelClose">&times;</button>
+        </div>
+        <div class="panel-content" id="panelContent"></div>
+      </div>
     </div>
   </div>
+
   <div id="roster-view" class="view-panel">
     <div class="roster-table">
-      <table id="rosterTable">
+      <table>
         <thead>
           <tr>
-            <th data-col="seat">SEAT</th>
-            <th data-col="name">NAME</th>
-            <th data-col="title">TITLE</th>
-            <th data-col="dept">DEPT</th>
-            <th data-col="seatNeeded">NEEDED</th>
-            <th data-col="status">STATUS</th>
+            <th style="cursor:pointer;" data-sort="name">Name</th>
+            <th style="cursor:pointer;" data-sort="dept">Dept</th>
+            <th style="cursor:pointer;" data-sort="title">Title</th>
+            <th style="cursor:pointer;" data-sort="seat">Seat</th>
+            <th style="cursor:pointer;" data-sort="status">Status</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="rosterBody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modalTitle"></div>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-footer" id="modalFooter"></div>
-  </div>
-</div>
-
-<div id="sidePanel" class="side-panel">
-  <div class="panel-header">
-    <div class="panel-title" id="panelTitle"></div>
-    <button class="panel-close" id="panelClose">&times;</button>
-  </div>
-  <div class="panel-content" id="panelContent"></div>
-</div>
-
 <script>
-// ══════════════════════════════════════════════════════════════════════════════
-// DATA STRUCTURES (from original, preserved exactly)
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 1. CONSTANTS & DEPARTMENTS
+// ══════════════════════════════════════════════════
 
 const DEPTS={
   'Management':        {color:'#8546CC', fg:'#fff'},
@@ -1127,228 +1208,161 @@ const DEPTS={
   'Unassigned':        {color:'#888', fg:'#fff'},
 };
 
-const SEATS={
-  1: {name:'Coltin Kinsey',         dept:'Management',        title:'Chief of Staff, Business Units'},
-  2: {name:'Michael Atchoo',        dept:'Management',        title:'Chief of Staff'},
-  3: {name:'Nick Carey',            dept:'Product Marketing', title:'Lead Product Marketing Manager'},
-  4: {name:'Greg Banks',            dept:'Talent Acquisition',title:'Talent Acquisition Specialist'},
-  5: {name:'Brianne Edwards',       dept:'Management',        title:'Executive Business Partner'},
-  6: {name:'Jean Soong',            dept:'Management',        title:'Executive Business Partner'},
-  7: {name:'Anastasia Parsons',     dept:'Management',        title:'Executive Coordinator'},
-  8: {name:'Maggie McCarthy',       dept:'Demand Generation', title:'Global Partner Marketing Program Manager'},
-  9: {name:'Brendan Lee',           dept:'Unassigned',        title:'Contract'},
-  10:{name:'Bryan Gilligan',        dept:'Demand Generation', title:'Visual Designer'},
-  11:{name:'KJ Singh',              dept:'Product',           title:'Director of Product, App Ecosystem'},
-  12:{name:'Lauren Harrington',     dept:'Product',           title:'Senior Product Manager'},
-  13:{name:'Carlene Reyes',         dept:'Product Marketing', title:'Senior Customer Marketing Manager'},
-  14:{name:'Trenton Erker',         dept:'Demand Generation', title:'SEO & AI Search Strategy Lead'},
-  15:{name:'Trent Morris',          dept:'Demand Generation', title:'Growth Marketing Manager'},
-  16:{name:'Cade McNelly',          dept:'Demand Generation', title:'Digital Content Producer'},
-  17:{name:'Ravi Kiran Kethamakka', dept:'Engineering',       title:'Backend/AI Engineering'},
-  18:{name:'',                      dept:'Unassigned',        title:''},
-  19:{name:'Taran Bains',           dept:'Engineering',       title:'Junior Software Engineer'},
-  20:{name:'Sai Arun Reddy Katipally',dept:'Engineering',     title:'Junior Software Engineer'},
-  21:{name:'Debayan Datta',         dept:'Engineering',       title:'Junior Software Engineer'},
-  22:{name:'',                      dept:'Unassigned',        title:''},
-  23:{name:'Matthew Watson',        dept:'Finance',           title:'Strategic Pricing Manager'},
-  24:{name:'Jeff Piaquadio',        dept:'Finance',           title:'Director FP&A'},
-  25:{name:'Buay Ruot',             dept:'Account Executives',title:'Account Manager - Seattle'},
-  26:{name:'Natalie Desjardins',    dept:'Account Executives',title:'Senior Account Manager - Seattle'},
-  27:{name:'Mike Winkler',          dept:'Success',           title:'Account Manager'},
-  28:{name:'Brady Thomas',          dept:'Success',           title:'Account Manager - Seattle'},
-  29:{name:'Ariel Dompier',         dept:'Success',           title:'Account Manager'},
-  30:{name:'Alissa Swartz',         dept:'Account Executives',title:'Corporate Account Executive'},
-  31:{name:'Stephen Wong',          dept:'Demand Generation', title:'Website Developer, Associate'},
-  32:{name:'Deepanshu Sandhuria',   dept:'Engineering',       title:'Engineering Manager'},
-  33:{name:'Prathamesh Chitodkar',  dept:'Security',          title:'Engineering Manager'},
-  34:{name:'Claire Wang',           dept:'Engineering',       title:'Senior Software Engineer'},
-  35:{name:'Robert Casto',          dept:'Core Tech IT',      title:'IT Operations Manager'},
-  36:{name:'Ravi Ghanta',           dept:'Core Tech IT',      title:'Director of Internal Productivity & IT'},
-  37:{name:'Harsh Bajaj',           dept:'Engineering',       title:'Senior Software Engineer, Integrations'},
-  38:{name:'Nagendra Gupta',        dept:'Data',              title:'Data Engineering Manager'},
-  39:{name:'Christopher Bukavich',  dept:'Security',          title:'Senior Security Engineer'},
-  40:{name:'Jazmine McGinnis',      dept:'Onboarding',        title:'Staff CE'},
-  41:{name:'Ashley Hwang',          dept:'Unassigned',        title:'Interim'},
-  42:{name:'Alex Yang',             dept:'Engineering',       title:'Software Engineer'},
-  43:{name:'Cate Elliott',          dept:'HR Ops',            title:'HR Operations Specialist'},
-  44:{name:'Marine Viet',           dept:'Demand Generation', title:'Intern, Marketing Programs'},
+const SYMBOL_CATEGORIES={
+  'Meeting': ['🗓', '📋', '📊'],
+  'Facilities': ['🚪', '🪟', '🚰'],
+  'Tech': ['💻', '🖨', '☎'],
+  'Markers': ['📍', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣'],
 };
 
-const HEADCOUNT_DEFAULT=[
-  {seat:'1', name:'Coltin Kinsey',            title:'Chief of Staff, Business Units',           dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'2', name:'Michael Atchoo',           title:'Chief of Staff',                           dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'3', name:'Nick Carey',               title:'Lead Product Marketing Manager',           dept:'Product Marketing', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'5', name:'Brianne Edwards',          title:'Executive Business Partner',               dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'7', name:'Anastasia Parsons',        title:'Executive Coordinator',                    dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'8', name:'Maggie McCarthy',          title:'Global Partner Marketing Program Manager', dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'9', name:'Brendan Lee',              title:'Contract',                                 dept:'Unassigned',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'10',name:'Bryan Gilligan',           title:'Visual Designer',                          dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'12',name:'Lauren Harrington',        title:'Senior Product Manager',                   dept:'Product',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'13',name:'Carlene Reyes',            title:'Senior Customer Marketing Manager',        dept:'Product Marketing', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'16',name:'Cade McNelly',             title:'Digital Content Producer',                 dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'23',name:'Matthew Watson',           title:'Strategic Pricing Manager',                dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'OOO May 1-29', status:'OOO'},
-  {seat:'24',name:'Jeff Piaquadio',           title:'Director FP&A',                            dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'30',name:'Alissa Swartz',            title:'Corporate Account Executive',              dept:'Account Executives',seatNeeded:'3/2/26',  endDate:'',        notes:'WFH??', status:'WFH'},
-  {seat:'31',name:'Stephen Wong',             title:'Website Developer, Associate',             dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'32',name:'Deepanshu Sandhuria',      title:'Engineering Manager',                      dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'OOO Mar 23-30', status:'OOO'},
-  {seat:'33',name:'Prathamesh Chitodkar',     title:'Engineering Manager',                      dept:'Security',          seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'34',name:'Claire Wang',              title:'Senior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'35',name:'Robert Casto',             title:'IT Operations Manager',                    dept:'Core Tech IT',      seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'36',name:'Ravi Ghanta',              title:'Director of Internal Productivity & IT',   dept:'Core Tech IT',      seatNeeded:'3/2/26',  endDate:'',        notes:'WFH?', status:'WFH'},
-  {seat:'37',name:'Harsh Bajaj',              title:'Senior Software Engineer, Integrations',   dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'38',name:'Nagendra Gupta',           title:'Data Engineering Manager',                 dept:'Data',              seatNeeded:'3/2/26',  endDate:'',        notes:'WFH', status:'WFH'},
-  {seat:'40',name:'Jazmine McGinnis',         title:'Staff CE',                                 dept:'Onboarding',        seatNeeded:'3/2/26',  endDate:'4/10/26', notes:'OOO April 13-20', status:'OOO'},
-  {seat:'41',name:'Ashley Hwang',             title:'Interim',                                  dept:'Unassigned',        seatNeeded:'3/2/26',  endDate:'',        notes:'Remove seat - find out plans', status:''},
-  {seat:'44',name:'Marine Viet',              title:'Intern, Marketing Programs',               dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'WFH',name:'Cassy Searles',           title:'Senior Legal Counsel',                     dept:'Legal',             seatNeeded:'3/2/26',  endDate:'',        notes:'WFH check with Cassy/Alain', status:'WFH'},
-  {seat:'—', name:'Richelle Margaux Yunker',  title:'Account Receivable & Cash Collections',   dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'—', name:'Subhleen Marok',           title:'Senior Account Receivable',               dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
-  {seat:'6', name:'Jean Soong',               title:'Executive Business Partner',               dept:'Management',        seatNeeded:'3/9/26',  endDate:'',        notes:'WFH??', status:'WFH'},
-  {seat:'39',name:'Christopher Bukavich',     title:'Senior Security Engineer',                 dept:'Security',          seatNeeded:'3/9/26',  endDate:'4/10/26', notes:'', status:''},
-  {seat:'43',name:'Cate Elliott',             title:'HR Operations Specialist',                 dept:'HR Ops',            seatNeeded:'3/9/26',  endDate:'4/10/26', notes:'OOO April 13-24', status:'OOO'},
-  {seat:'19',name:'Taran Bains',              title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/16/26', endDate:'',        notes:'', status:''},
-  {seat:'21',name:'Debayan Datta',            title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/16/26', endDate:'',        notes:'', status:''},
-  {seat:'27',name:'Mike Winkler',             title:'Account Manager',                          dept:'Success',           seatNeeded:'3/23/26', endDate:'',        notes:'', status:''},
-  {seat:'29',name:'Ariel Dompier',            title:'Account Manager',                          dept:'Success',           seatNeeded:'3/23/26', endDate:'',        notes:'', status:''},
-  {seat:'4', name:'Greg Banks',               title:'Talent Acquisition Specialist',            dept:'Talent Acquisition',seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'Gauge WFH preference', status:''},
-  {seat:'11',name:'KJ Singh',                 title:'Director of Product, App Ecosystem',       dept:'Product',           seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'', status:''},
-  {seat:'20',name:'Sai Arun Reddy Katipally', title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
-  {seat:'25',name:'Buay Ruot',                title:'Account Manager - Seattle',                dept:'Account Executives',seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
-  {seat:'26',name:'Natalie Desjardins',       title:'Senior Account Manager - Seattle',         dept:'Account Executives',seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
-  {seat:'28',name:'Tom Forter',               title:'Visiting Sales Manager',                   dept:'Success',           seatNeeded:'4/6/26',  endDate:'4/10/26', notes:"Sitting in Maggie's desk", status:'VISITOR'},
-  {seat:'Office',name:'Helen-Alice Miranda',  title:"HA (Alex Yang's seat)",                    dept:'Management',        seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'', status:''},
-  {seat:'14',name:'Trenton Erker',            title:'SEO & AI Search Strategy Lead',            dept:'Demand Generation', seatNeeded:'4/13/26', endDate:'',        notes:'OOO April 6-10', status:'OOO'},
-  {seat:'15',name:'Madelyn DePrey',           title:'Visiting Sales Manager',                   dept:'Sales Overhead',    seatNeeded:'4/13/26', endDate:'4/16/26', notes:'', status:'VISITOR'},
-  {seat:'28',name:'Brady Thomas',             title:'Account Manager - Seattle',                dept:'Success',           seatNeeded:'4/13/26', endDate:'',        notes:'', status:''},
-  {seat:'42',name:'Alex Yang',                title:'Software Engineer',                        dept:'Engineering',       seatNeeded:'4/13/26', endDate:'',        notes:'OOO April 1-10, Thursdays only', status:'OOO'},
-  {seat:'Conf',name:'Michele Trevisiol',      title:'Visitor',                                  dept:'Unassigned',        seatNeeded:'4/13/26', endDate:'4/16/26', notes:'Thursdays only', status:'VISITOR'},
-  {seat:'15',name:'Trent Morris',             title:'Growth Marketing Manager',                 dept:'Demand Generation', seatNeeded:'4/20/26', endDate:'',        notes:'OOO April 2-20', status:'OOO'},
-  {seat:'17',name:'Ravi Kiran Kethamakka',    title:'Backend/AI Engineering',                   dept:'Engineering',       seatNeeded:'4/20/26', endDate:'',        notes:"Place in Chris's desk", status:''},
-  {seat:'38',name:'Sujeeth Namburi',          title:'Security Engineer',                        dept:'Security',          seatNeeded:'4/20/26', endDate:'',        notes:"Tentative. Can sit in Nagendra's seat", status:''},
-  {seat:'—', name:'Shujie Li',               title:'Senior Data Scientist',                    dept:'Data',              seatNeeded:'4/27/26', endDate:'',        notes:'Out until end of April', status:'OOO'},
-  {seat:'—', name:'Christopher Howard',       title:'Director of Procurement',                  dept:'Finance',           seatNeeded:'4/27/26', endDate:'',        notes:'', status:''},
-  {seat:'—', name:'Sean Davis',               title:'Senior Accountant A/P',                    dept:'Finance',           seatNeeded:'5/4/26',  endDate:'',        notes:'WFH April 6-EOM', status:'WFH'},
-  {seat:'—', name:'Umesh Waghmode',           title:'Senior Salesforce Engineer',               dept:'Engineering',       seatNeeded:'5/20/26', endDate:'',        notes:'', status:''},
-  {seat:'Office',name:'Lauren Newman',        title:'Chief Finance Officer',                    dept:'Finance',           seatNeeded:'Office',  endDate:'',        notes:'No desk needed — office assigned', status:''},
-  {seat:'Office',name:'Scott Chancellor',     title:'CEO',                                      dept:'Management',        seatNeeded:'Office',  endDate:'',        notes:'No desk needed — office assigned', status:''},
-  {seat:'Conf', name:'Fred Viet',             title:'Visiting Executive',                       dept:'Unassigned',        seatNeeded:'—',       endDate:'',        notes:'Booking conf room for full visit', status:'VISITOR'},
-];
+// ══════════════════════════════════════════════════
+// 2. OFFICE MANAGEMENT
+// ══════════════════════════════════════════════════
 
-function loadHC(){
-  try{const s=localStorage.getItem('aircall-sea-hc');if(s)return JSON.parse(s);}catch(e){}
-  return HEADCOUNT_DEFAULT.map(r=>({...r}));
-}
-function saveHC(){localStorage.setItem('aircall-sea-hc',JSON.stringify(HC));}
-let HC=loadHC();
-Object.defineProperty(window,'HEADCOUNT',{get:()=>HC});
+let OFFICES=[];
+let currentOfficeId='default';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// DEFAULT LAYOUT WITH NEW PROPERTIES
-// ══════════════════════════════════════════════════════════════════════════════
-
-function defaultLayout(){
+function blankLayout(){
   return {
-    roomPoints:[
-      [10,  13],   [310, 13],   [310, 40],   [344, 8],    [388, 8],
-      [388, 40],   [450, 40],   [450, 300],  [10, 300],
-    ],
-    confRooms:[
-      {name:'Conference A', cx:110, cy:75, r:18},
-      {name:'Conference B', cx:170, cy:75, r:18},
-      {name:'Kitchen',      cx:330, cy:26, r:12},
-    ],
-    desks:[
-      {id:1, x:80, y:120, w:24, h:16},
-      {id:2, x:120, y:120, w:24, h:16},
-      {id:3, x:160, y:120, w:24, h:16},
-      {id:4, x:200, y:120, w:24, h:16},
-      {id:5, x:240, y:120, w:24, h:16},
-      {id:6, x:280, y:120, w:24, h:16},
-      {id:7, x:320, y:120, w:24, h:16},
-      {id:8, x:360, y:120, w:24, h:16},
-      {id:9, x:80, y:160, w:24, h:16},
-      {id:10, x:120, y:160, w:24, h:16},
-      {id:11, x:160, y:160, w:24, h:16},
-      {id:12, x:200, y:160, w:24, h:16},
-      {id:13, x:240, y:160, w:24, h:16},
-      {id:14, x:280, y:160, w:24, h:16},
-      {id:15, x:320, y:160, w:24, h:16},
-      {id:16, x:360, y:160, w:24, h:16},
-      {id:17, x:80, y:200, w:24, h:16},
-      {id:18, x:120, y:200, w:24, h:16},
-      {id:19, x:160, y:200, w:24, h:16},
-      {id:20, x:200, y:200, w:24, h:16},
-      {id:21, x:240, y:200, w:24, h:16},
-      {id:22, x:280, y:200, w:24, h:16},
-      {id:23, x:320, y:200, w:24, h:16},
-      {id:24, x:360, y:200, w:24, h:16},
-      {id:25, x:80, y:240, w:24, h:16},
-      {id:26, x:120, y:240, w:24, h:16},
-      {id:27, x:160, y:240, w:24, h:16},
-      {id:28, x:200, y:240, w:24, h:16},
-      {id:29, x:240, y:240, w:24, h:16},
-      {id:30, x:280, y:240, w:24, h:16},
-      {id:31, x:320, y:240, w:24, h:16},
-      {id:32, x:360, y:240, w:24, h:16},
-      {id:33, x:80, y:280, w:24, h:16},
-      {id:34, x:120, y:280, w:24, h:16},
-      {id:35, x:160, y:280, w:24, h:16},
-      {id:36, x:200, y:280, w:24, h:16},
-      {id:37, x:240, y:280, w:24, h:16},
-      {id:38, x:280, y:280, w:24, h:16},
-      {id:39, x:320, y:280, w:24, h:16},
-      {id:40, x:360, y:280, w:24, h:16},
-      {id:41, x:400, y:200, w:24, h:16},
-      {id:42, x:400, y:240, w:24, h:16},
-      {id:43, x:400, y:280, w:24, h:16},
-      {id:44, x:420, y:160, w:24, h:16},
-    ],
-    collabTables:[
-      {name:'Table A', cx:80, cy:100, r:12},
-      {name:'Table B', cx:200, cy:100, r:12},
-      {name:'Table C', cx:320, cy:100, r:12},
-    ],
-    corridorWalls:[],
-    symbols:[],
-    annotations:[],
+    roomPoints: [[10,13],[450,13],[450,300],[10,300]],
+    confRooms: [],
+    desks: [],
+    collabTables: [],
+    corridorWalls: [],
+    symbols: [],
+    annotations: [],
   };
 }
 
-let LAYOUT=loadLayoutFromStorage();
-function loadLayoutFromStorage(){
+function loadOffices(){
   try{
-    let stored=localStorage.getItem('aircall-sea-layout-v7');
-    if(stored){
-      let data=JSON.parse(stored);
-      if(!data.symbols) data.symbols=[];
-      if(!data.annotations) data.annotations=[];
-      return data;
-    }
+    const stored=localStorage.getItem('floorcraft-offices');
+    if(stored) return JSON.parse(stored);
   }catch(e){}
-  return defaultLayout();
+  return [];
 }
 
-function saveLayout(){
-  localStorage.setItem('aircall-sea-layout-v7', JSON.stringify(LAYOUT));
+function saveOffices(){
+  localStorage.setItem('floorcraft-offices', JSON.stringify(OFFICES));
 }
 
-function resetLayout(){
-  if(confirm('Reset to defaults?')){
-    LAYOUT=defaultLayout();
-    clearSelection();
-    showEditPanel(null);
-    history_stack=[];
-    historyIdx=-1;
+function initializeOffices(){
+  OFFICES=loadOffices();
+  if(OFFICES.length===0){
+    OFFICES=[{id:'default', name:'New Office', emoji:'🏢', createdAt:new Date().toISOString()}];
+    saveOffices();
+  }
+  const stored=localStorage.getItem('floorcraft-current-office');
+  currentOfficeId=stored&&OFFICES.find(o=>o.id===stored)?stored:'default';
+}
+
+function createOffice(name, emoji){
+  const id='office-'+Date.now();
+  const office={id, name, emoji, createdAt:new Date().toISOString()};
+  OFFICES.push(office);
+  saveOffices();
+  saveCurrentOfficeData();
+  switchOffice(id);
+  return office;
+}
+
+function deleteOffice(officeId){
+  if(officeId==='default'||OFFICES.length===1) return;
+  if(!confirm('Delete this office?')) return;
+  OFFICES=OFFICES.filter(o=>o.id!==officeId);
+  localStorage.removeItem(`floorcraft-office-${officeId}-layout`);
+  localStorage.removeItem(`floorcraft-office-${officeId}-hc`);
+  saveOffices();
+  if(currentOfficeId===officeId){
+    currentOfficeId=OFFICES[0].id;
+    loadOfficeData(currentOfficeId);
     renderAll();
-    saveLayout();
+  }
+  updateOfficeDropdown();
+}
+
+function renameOffice(officeId, newName){
+  const office=OFFICES.find(o=>o.id===officeId);
+  if(office){
+    office.name=newName;
+    saveOffices();
+    updateOfficeDropdown();
   }
 }
 
+function loadOfficeData(officeId){
+  currentOfficeId=officeId;
+  localStorage.setItem('floorcraft-current-office', officeId);
+
+  try{
+    const layout=localStorage.getItem(`floorcraft-office-${officeId}-layout`);
+    LAYOUT=layout?JSON.parse(layout):blankLayout();
+    if(!LAYOUT.symbols) LAYOUT.symbols=[];
+    if(!LAYOUT.annotations) LAYOUT.annotations=[];
+  }catch(e){
+    LAYOUT=blankLayout();
+  }
+
+  try{
+    const hc=localStorage.getItem(`floorcraft-office-${officeId}-hc`);
+    HC=hc?JSON.parse(hc):[];
+  }catch(e){
+    HC=[];
+  }
+}
+
+function saveCurrentOfficeData(){
+  localStorage.setItem(`floorcraft-office-${currentOfficeId}-layout`, JSON.stringify(LAYOUT));
+  localStorage.setItem(`floorcraft-office-${currentOfficeId}-hc`, JSON.stringify(HC));
+}
+
+function switchOffice(officeId){
+  saveCurrentOfficeData();
+  loadOfficeData(officeId);
+  clearSelection();
+  showEditPanel(null);
+  history_stack=[];
+  historyIdx=-1;
+  renderAll();
+  updateOfficeDropdown();
+}
+
+function updateOfficeDropdown(){
+  const btn=document.getElementById('officeDropdown');
+  const office=OFFICES.find(o=>o.id===currentOfficeId);
+  if(office){
+    const deskCount=LAYOUT.desks.length;
+    btn.textContent=`${office.emoji} ${office.name} ▾`;
+  }
+
+  const list=document.getElementById('officeList');
+  list.innerHTML=OFFICES.map(office=>{
+    const deskCount=(() => {
+      try{
+        const l=localStorage.getItem(`floorcraft-office-${office.id}-layout`);
+        return l?JSON.parse(l).desks.length:0;
+      }catch(e){return 0;}
+    })();
+    const active=office.id===currentOfficeId?'active':'';
+    return `<div class="office-dropdown-item ${active}" data-office-id="${office.id}">
+      <div class="office-item-label">${office.emoji} ${office.name}</div>
+      <div class="office-item-count">${deskCount} desks</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// 3. LAYOUT & HEADCOUNT
+// ══════════════════════════════════════════════════
+
+let LAYOUT=blankLayout();
+let HC=[];
+
 function deepClone(o){return JSON.parse(JSON.stringify(o));}
 
-// ══════════════════════════════════════════════════════════════════════════════
-// HISTORY & UNDO/REDO
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 4. HISTORY & UNDO/REDO
+// ══════════════════════════════════════════════════
 
 let history_stack=[];
 let historyIdx=-1;
@@ -1367,7 +1381,7 @@ function undo(){
     clearSelection();
     showEditPanel(null);
     renderAll();
-    saveLayout();
+    saveCurrentOfficeData();
     updateUndoRedoBtns();
   }
 }
@@ -1379,7 +1393,7 @@ function redo(){
     clearSelection();
     showEditPanel(null);
     renderAll();
-    saveLayout();
+    saveCurrentOfficeData();
     updateUndoRedoBtns();
   }
 }
@@ -1389,1028 +1403,786 @@ function updateUndoRedoBtns(){
   document.getElementById('btnRedo').disabled=historyIdx>=history_stack.length-1;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// VIEWPORT & ZOOM
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 5. VIEWPORT & ZOOM
+// ══════════════════════════════════════════════════
 
 let vp={x:0, y:0, scale:1};
 
 function applyVP(){
   const svg=document.getElementById('floor-svg');
-  svg.setAttribute('viewBox', `${vp.x} ${vp.y} ${500/vp.scale} ${300/vp.scale}`);
+  svg.setAttribute('viewBox',`${vp.x} ${vp.y} ${svg.clientWidth/vp.scale} ${svg.clientHeight/vp.scale}`);
   document.getElementById('zoomPct').textContent=Math.round(vp.scale*100)+'%';
 }
 
-function svgPt(e){
-  const svg=document.getElementById('floor-svg');
-  const rect=svg.getBoundingClientRect();
-  const x=(e.clientX-rect.left)/rect.width * (500/vp.scale) + vp.x;
-  const y=(e.clientY-rect.top)/rect.height * (300/vp.scale) + vp.y;
-  return [x, y];
-}
+function zoomIn(){vp.scale*=1.2; applyVP();}
+function zoomOut(){vp.scale/=1.2; applyVP();}
 
-function vmPt(e){
-  const svg=document.getElementById('floor-svg');
-  const rect=svg.getBoundingClientRect();
-  return [(e.clientX-rect.left), (e.clientY-rect.top)];
-}
+// ══════════════════════════════════════════════════
+// 6. HELPERS
+// ══════════════════════════════════════════════════
 
-function zoomAt(cx, cy, factor){
-  vp.scale*=factor;
-  vp.scale=Math.max(0.1, Math.min(3, vp.scale));
-  vp.x+=cx*(1-1/factor)/vp.scale;
-  vp.y+=cy*(1-1/factor)/vp.scale;
-  applyVP();
-}
+function dist(a,b){return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);}
+function midpoint(a,b){return {x:(a.x+b.x)/2, y:(a.y+b.y)/2};}
+function sign(n){return n===0?0:n>0?1:-1;}
 
-function zoomStep(dir){
-  const center=[250/vp.scale+vp.x, 150/vp.scale+vp.y];
-  zoomAt(center[0], center[1], dir>0?1.2:1/1.2);
-}
-
-function resetViewport(){
-  vp={x:0, y:0, scale:1};
-  applyVP();
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════════════════════════════════
-
-function el(tag, attrs, parent){
-  const e=document.createElement(tag);
-  if(attrs)Object.assign(e,attrs);
-  if(parent)parent.appendChild(e);
-  return e;
-}
-
-function txt(content, attrs, parent){
-  const e=document.createTextNode(content);
-  const span=document.createElement('span');
-  if(attrs)Object.assign(span,attrs);
-  span.appendChild(e);
-  if(parent)parent.appendChild(span);
-  return span;
-}
-
-function shortName(n){
-  if(!n||n.length<1)return'?';
-  const parts=n.split(' ');
-  if(parts.length===1)return n.substring(0,2).toUpperCase();
-  return(parts[0][0]+parts[parts.length-1][0]).toUpperCase();
-}
-
-function snapToGrid(v){
-  return Math.round(v/8)*8;
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// THEME TOGGLE
-// ══════════════════════════════════════════════════════════════════════════════
-
-function initTheme(){
-  const stored=localStorage.getItem('aircall-theme');
-  const isDark=stored==='dark'||(!stored);
-  if(!isDark){
-    document.documentElement.classList.add('light-mode');
+function ptInPoly(pt, poly){
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const xi=poly[i][0], yi=poly[i][1];
+    const xj=poly[j][0], yj=poly[j][1];
+    const intersect=(yi>pt.y)!==(yj>pt.y)&&pt.x<(xj-xi)*(pt.y-yi)/(yj-yi)+xi;
+    if(intersect) inside=!inside;
   }
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  return inside;
 }
+
+function getDeptColor(dept){
+  const d=DEPTS[dept];
+  return d?d.color:'#888';
+}
+
+// ══════════════════════════════════════════════════
+// 7. THEME TOGGLE
+// ══════════════════════════════════════════════════
 
 function toggleTheme(){
-  const isDark=document.documentElement.classList.contains('light-mode');
+  const isDark=!document.documentElement.classList.contains('light-mode');
   if(isDark){
-    document.documentElement.classList.remove('light-mode');
-    localStorage.setItem('aircall-theme', 'dark');
-  }else{
     document.documentElement.classList.add('light-mode');
-    localStorage.setItem('aircall-theme', 'light');
-  }
-}
-
-// Continue in next part...
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SELECTION & INTERACTION STATE
-// ══════════════════════════════════════════════════════════════════════════════
-
-let editMode=false, gridSnap=false;
-let drawingWall=false, wallStart=null;
-let drawingText=false, textPlacementMode=false;
-let selection=[];
-let dragState=null;
-let spaceDown=false;
-
-let activeDept='ALL', searchTerm='', currentView='map';
-let rosterSort={col:'seat',dir:'asc'};
-
-// ══════════════════════════════════════════════════════════════════════════════
-// SYMBOL LIBRARY
-// ══════════════════════════════════════════════════════════════════════════════
-
-const SYMBOL_CATEGORIES={
-  Desks:[
-    {name:'Single Desk', svg:'<rect x="0" y="0" width="20" height="14" fill="#999" rx="2"/>'},
-    {name:'Double Desk', svg:'<rect x="0" y="0" width="28" height="16" fill="#999" rx="2"/>'},
-    {name:'Standing Desk', svg:'<rect x="0" y="0" width="18" height="12" fill="#AAA" rx="2"/><line x1="4" y1="0" x2="4" y2="12" stroke="#666" stroke-width="1"/>'},
-    {name:'L-Desk', svg:'<path d="M0,0 L18,0 L18,10 L10,10 L10,16 L0,16 Z" fill="#999" stroke="#666" stroke-width="0.5"/>'},
-    {name:'Workstation', svg:'<g><rect x="0" y="0" width="24" height="18" fill="#888" rx="2" opacity="0.6"/><circle cx="12" cy="9" r="4" fill="#AAA"/></g>'},
-    {name:'Monitor', svg:'<rect x="2" y="1" width="16" height="10" fill="none" stroke="#999" stroke-width="1"/><rect x="6" y="11" width="8" height="1" fill="#999"/>'},
-  ],
-  Seating:[
-    {name:'Office Chair', svg:'<circle cx="8" cy="6" r="5" fill="#888"/><rect x="5" y="10" width="6" height="2" fill="#666"/>'},
-    {name:'Conference Chair', svg:'<ellipse cx="8" cy="5" rx="4" ry="6" fill="#777"/><rect x="5" y="11" width="6" height="1" fill="#555"/>'},
-    {name:'Visitor Chair', svg:'<rect x="2" y="2" width="12" height="10" fill="#AAA" rx="1"/>'},
-  ],
-  Tables:[
-    {name:'Round Table', svg:'<circle cx="12" cy="12" r="10" fill="none" stroke="#888" stroke-width="1"/>'},
-    {name:'Rectangle Table', svg:'<rect x="4" y="6" width="16" height="12" fill="none" stroke="#888" stroke-width="1" rx="1"/>'},
-    {name:'Square Table', svg:'<rect x="4" y="4" width="16" height="16" fill="none" stroke="#888" stroke-width="1"/>'},
-    {name:'High Table', svg:'<rect x="6" y="2" width="12" height="14" fill="none" stroke="#999" stroke-width="1.5"/>'},
-  ],
-  Conference:[
-    {name:'Video Unit', svg:'<rect x="2" y="4" width="20" height="12" fill="#666" rx="1"/><circle cx="12" cy="10" r="3" fill="#999"/>'},
-    {name:'Whiteboard', svg:'<rect x="1" y="2" width="22" height="16" fill="#F0F0F0" stroke="#666" stroke-width="1"/>'},
-    {name:'Projector', svg:'<circle cx="12" cy="8" r="4" fill="#555"/><rect x="10" y="12" width="4" height="2" fill="#333"/>'},
-  ],
-  Kitchen:[
-    {name:'Fridge', svg:'<rect x="2" y="1" width="20" height="22" fill="#CCC" stroke="#999" stroke-width="1"/><rect x="4" y="3" width="16" height="18" fill="#DDD" stroke="#AAA" stroke-width="0.5"/>'},
-    {name:'Sink', svg:'<rect x="4" y="4" width="16" height="10" fill="none" stroke="#888" stroke-width="1.5" rx="1"/>'},
-    {name:'Microwave', svg:'<rect x="3" y="3" width="18" height="12" fill="#BBB" stroke="#666" stroke-width="1" rx="1"/>'},
-    {name:'Counter', svg:'<rect x="1" y="2" width="22" height="8" fill="#D4A574" stroke="#8B6914" stroke-width="1"/>'},
-  ],
-  Bathroom:[
-    {name:'Toilet', svg:'<ellipse cx="12" cy="8" rx="6" ry="8" fill="none" stroke="#888" stroke-width="1"/><rect x="9" y="14" width="6" height="4" fill="none" stroke="#888" stroke-width="1"/>'},
-    {name:'Sink', svg:'<circle cx="12" cy="10" r="7" fill="none" stroke="#888" stroke-width="1"/><rect x="10" y="16" width="4" height="2" fill="#888"/>'},
-    {name:'Stall', svg:'<rect x="3" y="2" width="18" height="20" fill="none" stroke="#888" stroke-width="1.5"/><line x1="12" y1="2" x2="12" y2="22" stroke="#888" stroke-width="1"/>'},
-  ],
-};
-
-function initSymbolPanel(){
-  const list=document.getElementById('symbolList');
-  for(const [cat, items] of Object.entries(SYMBOL_CATEGORIES)){
-    const catDiv=el('div', {className:'symbol-category'}, list);
-    txt(cat, {className:'symbol-cat-title'}, catDiv);
-    for(const item of items){
-      const itemDiv=el('div', {className:'symbol-item'}, catDiv);
-      itemDiv.textContent=item.name;
-      itemDiv.draggable=true;
-      itemDiv.addEventListener('dragstart', (e)=>{
-        e.dataTransfer.effectAllowed='copy';
-        e.dataTransfer.setData('text/json', JSON.stringify({type:'symbol', svg:item.svg, name:item.name}));
-      });
-    }
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// RENDERING
-// ══════════════════════════════════════════════════════════════════════════════
-
-function clearSelection(){selection=[];}
-
-function isSelected(type,idx){
-  return selection.some(s=>s.type===type&&s.idx===idx);
-}
-
-function setSelection(item){
-  selection=[item];
-  afterSelectionChange();
-}
-
-function addToSelection(item){
-  if(!isSelected(item.type, item.idx)){
-    selection.push(item);
-  }
-  afterSelectionChange();
-}
-
-function toggleSelection(item){
-  if(isSelected(item.type, item.idx)){
-    selection=selection.filter(s=>!(s.type===item.type&&s.idx===item.idx));
+    localStorage.setItem('floorcraft-theme', 'light');
+    document.getElementById('themeToggle').textContent='☀️';
   }else{
-    selection.push(item);
+    document.documentElement.classList.remove('light-mode');
+    localStorage.setItem('floorcraft-theme', 'dark');
+    document.getElementById('themeToggle').textContent='🌙';
   }
-  afterSelectionChange();
 }
 
-function afterSelectionChange(){
-  const hasAlignables=selection.length>1&&selection.every(s=>['desk','tableCircle'].includes(s.type));
-  document.getElementById('alignRow').classList.toggle('visible', hasAlignables);
-  const hasDelete=selection.length>0;
-  document.getElementById('btnDelete').disabled=!hasDelete;
-  renderDesks();
-  renderTables();
-  updateEditPanel();
-}
-
-function updateEditPanel(){
-  if(selection.length===0){
-    showEditPanel(null);
+function initTheme(){
+  const theme=localStorage.getItem('floorcraft-theme')||'dark';
+  if(theme==='light'){
+    document.documentElement.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent='☀️';
   }else{
-    showEditPanel(selection[0]);
+    document.getElementById('themeToggle').textContent='🌙';
   }
 }
+
+// ══════════════════════════════════════════════════
+// 8. SELECTION & INTERACTION
+// ══════════════════════════════════════════════════
+
+let selectedId=null;
+let selectedType=null;
+let isEditing=false;
+let editMode=null;
+let tempWallPts=[];
+let gridSnapEnabled=false;
+
+function selectItem(type, id){
+  clearSelection();
+  selectedType=type;
+  selectedId=id;
+  if(type==='desk'&&document.getElementById(`desk-${id}`)){
+    document.getElementById(`desk-${id}`).classList.add('selected');
+  }
+  showEditPanel(type, id);
+}
+
+function clearSelection(){
+  document.querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
+  selectedId=null;
+  selectedType=null;
+}
+
+function toggleEditMode(){
+  isEditing=!isEditing;
+  document.getElementById('editToolbar').classList.toggle('on');
+  document.getElementById('btnEdit').classList.toggle('on', isEditing);
+  document.getElementById('editBadge').classList.toggle('on', isEditing);
+  if(!isEditing) clearSelection();
+}
+
+// ══════════════════════════════════════════════════
+// 9. RENDERING
+// ══════════════════════════════════════════════════
 
 function renderAll(){
   const svg=document.getElementById('floor-svg');
   svg.innerHTML='';
-  renderRoom();
-  renderConfRooms();
-  renderTables();
-  renderDesks();
-  renderAnnotations();
-  renderCorridorWalls();
-  renderLabels();
-  if(editMode) renderHandles();
-  updateCount();
-}
 
-function renderRoom(){
-  const svg=document.getElementById('floor-svg');
-  if(LAYOUT.roomPoints.length<3) return;
-  const pts=LAYOUT.roomPoints.map(p=>`${p[0]},${p[1]}`).join(' ');
-  const poly=el('polygon', {points:pts, fill:'rgba(200,220,220,0.05)', stroke:'#666', 'stroke-width':'1.5'}, svg);
-}
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  svg.appendChild(defs);
 
-function renderConfRooms(){
-  const svg=document.getElementById('floor-svg');
-  LAYOUT.confRooms.forEach((room,idx)=>{
-    const g=el('g', {}, svg);
-    const circ=el('circle', {cx:room.cx, cy:room.cy, r:room.r, fill:'#E8D4F8', stroke:'#999', 'stroke-width':'1'}, g);
-    const lbl=el('text', {x:room.cx, y:room.cy, class:'room-lbl', textContent:room.name}, g);
+  Object.entries(DEPTS).forEach(([dept, {color}])=>{
+    const pat=document.createElementNS('http://www.w3.org/2000/svg','pattern');
+    pat.setAttribute('id', 'dept-'+dept);
+    pat.setAttribute('patternUnits', 'userSpaceOnUse');
+    pat.setAttribute('width', '4');
+    pat.setAttribute('height', '4');
+    const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('width', '4');
+    rect.setAttribute('height', '4');
+    rect.setAttribute('fill', color);
+    pat.appendChild(rect);
+    defs.appendChild(pat);
   });
-}
 
-function renderTables(){
-  const svg=document.getElementById('floor-svg');
-  LAYOUT.collabTables.forEach((table,idx)=>{
-    const g=el('g', {class:'table-g', 'data-idx':idx}, svg);
-    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'tableCircle',idx});});
-    const circ=el('circle', {cx:table.cx, cy:table.cy, r:table.r, fill:'#C4E5C1', stroke:isSelected('tableCircle',idx)?'var(--accent)':'#666', 'stroke-width':isSelected('tableCircle',idx)?'2':'1'}, g);
-    const lbl=el('text', {x:table.cx, y:table.cy+2, class:'room-lbl', textContent:table.name}, g);
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+
+  // Room
+  if(LAYOUT.roomPoints&&LAYOUT.roomPoints.length>0){
+    const roomPoly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    roomPoly.setAttribute('points', LAYOUT.roomPoints.map(p=>`${p[0]},${p[1]}`).join(' '));
+    const isDark=!document.documentElement.classList.contains('light-mode');
+    const fillColor=isDark?'rgba(200,220,220,0.05)':'rgba(0,38,32,0.04)';
+    roomPoly.setAttribute('fill', fillColor);
+    roomPoly.setAttribute('stroke', isDark?'#666':'#CED8D7');
+    roomPoly.setAttribute('stroke-width', '2');
+    g.appendChild(roomPoly);
+  }
+
+  // Conf rooms
+  LAYOUT.confRooms.forEach(cr=>{
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', cr.cx);
+    circle.setAttribute('cy', cr.cy);
+    circle.setAttribute('r', cr.r);
+    circle.setAttribute('fill', 'rgba(84, 176, 196, 0.15)');
+    circle.setAttribute('stroke', '#56B0C4');
+    circle.setAttribute('stroke-width', '1.5');
+    g.appendChild(circle);
+
+    const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x', cr.cx);
+    lbl.setAttribute('y', cr.cy);
+    lbl.setAttribute('class', 'room-lbl');
+    lbl.textContent=cr.name;
+    g.appendChild(lbl);
   });
-}
 
-function renderDesks(){
-  const svg=document.getElementById('floor-svg');
-  LAYOUT.desks.forEach((d,idx)=>{
-    const dg=el('g', {class:'desk-g'+(isDeskDimmed(d.id)?' dimmed':'')+(isSelected('desk',idx)?' selected':''), 'data-idx':idx}, svg);
-    dg.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'desk',idx});});
-    dg.addEventListener('contextmenu', (e)=>{e.preventDefault(); toggleSelection({type:'desk',idx});});
-    const body=el('rect', {x:d.x, y:d.y, width:d.w, height:d.h, class:'desk-body', fill:SEATS[d.id]?DEPTS[SEATS[d.id].dept].color:'#888', rx:2}, dg);
-    if(HC.find(hc=>hc.seat==d.id)){
-      const name=SEATS[d.id]?SEATS[d.id].name:'';
-      txt(shortName(name), {class:'desk-lbl'}, el('text', {x:d.x+d.w/2, y:d.y+d.h/2}, dg));
+  // Collab tables
+  LAYOUT.collabTables.forEach(tbl=>{
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', tbl.cx);
+    circle.setAttribute('cy', tbl.cy);
+    circle.setAttribute('r', tbl.r);
+    circle.setAttribute('fill', 'rgba(241, 132, 36, 0.15)');
+    circle.setAttribute('stroke', '#F18424');
+    circle.setAttribute('stroke-width', '1.5');
+    g.appendChild(circle);
+
+    const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x', tbl.cx);
+    lbl.setAttribute('y', tbl.cy);
+    lbl.setAttribute('class', 'zone-lbl');
+    lbl.textContent=tbl.name.toUpperCase();
+    g.appendChild(lbl);
+  });
+
+  // Walls
+  LAYOUT.corridorWalls.forEach((wall, idx)=>{
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', wall.x1);
+    line.setAttribute('y1', wall.y1);
+    line.setAttribute('x2', wall.x2);
+    line.setAttribute('y2', wall.y2);
+    line.setAttribute('class', 'wall');
+    if(selectedType==='wall'&&selectedId===idx) line.classList.add('selected');
+    line.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('wall', idx);});
+    g.appendChild(line);
+  });
+
+  // Desks
+  LAYOUT.desks.forEach((desk, idx)=>{
+    const deskGroup=document.createElementNS('http://www.w3.org/2000/svg','g');
+    deskGroup.setAttribute('class', 'desk-g');
+    deskGroup.setAttribute('id', `desk-${desk.id}`);
+
+    const hcRow=HC.find(r=>r.seat===String(desk.id));
+    const dept=hcRow?hcRow.dept:'Unassigned';
+    const deptColor=getDeptColor(dept);
+
+    const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x', desk.x);
+    rect.setAttribute('y', desk.y);
+    rect.setAttribute('width', desk.w);
+    rect.setAttribute('height', desk.h);
+    rect.setAttribute('class', 'desk-body');
+    rect.setAttribute('fill', deptColor);
+    rect.setAttribute('stroke', '#fff');
+    rect.setAttribute('stroke-width', '1');
+    rect.setAttribute('rx', '2');
+
+    deskGroup.appendChild(rect);
+
+    if(hcRow&&hcRow.name){
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', desk.x+desk.w/2);
+      txt.setAttribute('y', desk.y+desk.h/2);
+      txt.setAttribute('class', 'desk-lbl');
+      txt.textContent=hcRow.name.split(' ')[0];
+      deskGroup.appendChild(txt);
     }
-    txt(d.id.toString(), {class:'desk-num'}, el('text', {x:d.x+d.w/2, y:d.y+d.h/2+4}, dg));
-  });
-}
 
-function renderAnnotations(){
-  const svg=document.getElementById('floor-svg');
-  LAYOUT.annotations.forEach((ann,idx)=>{
-    const g=el('g', {class:'text-annotation-g'+(isSelected('annotation',idx)?' selected':''), 'data-idx':idx}, svg);
-    const bg=el('rect', {x:ann.x-2, y:ann.y-ann.fontSize/2-2, width:ann.text.length*ann.fontSize*0.5+4, height:ann.fontSize+4, fill:'rgba(255,255,200,0.8)', stroke:isSelected('annotation',idx)?'var(--accent)':'#999', 'stroke-width':'1', rx:2}, g);
-    const t=el('text', {x:ann.x, y:ann.y, 'font-size':ann.fontSize, fill:'#000', 'text-anchor':'middle'}, g);
-    t.textContent=ann.text;
-    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'annotation',idx});});
-    g.style.cursor='pointer';
-  });
-}
+    const num=document.createElementNS('http://www.w3.org/2000/svg','text');
+    num.setAttribute('x', desk.x+desk.w-4);
+    num.setAttribute('y', desk.y+desk.h-3);
+    num.setAttribute('class', 'desk-num');
+    num.textContent=desk.id;
+    deskGroup.appendChild(num);
 
-function renderCorridorWalls(){
-  const svg=document.getElementById('floor-svg');
-  if(!LAYOUT.corridorWalls) return;
-  LAYOUT.corridorWalls.forEach((w,idx)=>{
-    const g=el('g', {class:'wall'+(isSelected('wall',idx)?' selected':''), 'data-idx':idx}, svg);
-    const line=el('line', {x1:w.x1, y1:w.y1, x2:w.x2, y2:w.y2, class:'wall'+(isSelected('wall',idx)?' selected':''), 'stroke-width':isSelected('wall',idx)?3:2}, g);
-    if(editMode){
-      const cx=(w.x1+w.x2)/2, cy=(w.y1+w.y2)/2;
-      const len=Math.sqrt(Math.pow(w.x2-w.x1,2)+Math.pow(w.y2-w.y1,2));
-      const meters=(len*0.01).toFixed(2);
-      const lbl=el('text', {x:cx, y:cy-4, class:'wall-label', textContent:meters+'m'}, g);
-    }
-    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'wall',idx});});
-  });
-}
-
-function renderLabels(){
-  const svg=document.getElementById('floor-svg');
-}
-
-function renderHandles(){
-  const svg=document.getElementById('floor-svg');
-  if(!editMode) return;
-  
-  LAYOUT.roomPoints.forEach((pt,idx)=>{
-    const circle=el('circle', {cx:pt[0], cy:pt[1], r:4, class:'v-handle'}, svg);
-    circle.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragVertex(e,idx);});
-  });
-
-  LAYOUT.desks.forEach((d,idx)=>{
-    const rh=el('circle', {cx:d.x+d.w, cy:d.y+d.h, r:3, class:'resize-handle'}, svg);
-    rh.addEventListener('mousedown', (e)=>{e.stopPropagation(); startResizeDesk(e,idx);});
-  });
-
-  if(LAYOUT.corridorWalls){
-    LAYOUT.corridorWalls.forEach((w,idx)=>{
-      const h1=el('circle', {cx:w.x1, cy:w.y1, r:3, class:'v-handle'}, svg);
-      h1.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragWallEnd(e,idx,0);});
-      const h2=el('circle', {cx:w.x2, cy:w.y2, r:3, class:'v-handle'}, svg);
-      h2.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragWallEnd(e,idx,1);});
+    deskGroup.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('desk', desk.id);});
+    if(isEditing) deskGroup.addEventListener('mousedown', (e)=>{
+      e.stopPropagation();
+      if(e.button!==0) return;
+      selectItem('desk', desk.id);
+      const startX=e.clientX, startY=e.clientY;
+      const deskX=desk.x, deskY=desk.y;
+      function onMove(ev){
+        const dx=ev.clientX-startX, dy=ev.clientY-startY;
+        desk.x=Math.round(deskX+dx/(vp.scale*2));
+        desk.y=Math.round(deskY+dy/(vp.scale*2));
+        renderAll();
+      }
+      function onUp(){
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        pushHistory();
+        saveCurrentOfficeData();
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
     });
-  }
+
+    g.appendChild(deskGroup);
+  });
+
+  // Annotations
+  LAYOUT.annotations.forEach((ann, idx)=>{
+    const textG=document.createElementNS('http://www.w3.org/2000/svg','g');
+    textG.setAttribute('class', 'text-annotation-g');
+    if(selectedType==='annotation'&&selectedId===idx) textG.classList.add('selected');
+
+    const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bg.setAttribute('x', ann.x-2);
+    bg.setAttribute('y', ann.y-8);
+    bg.setAttribute('width', ann.w||40);
+    bg.setAttribute('height', 12);
+    bg.setAttribute('fill', 'rgba(76, 229, 193, 0.15)');
+    bg.setAttribute('stroke', '#4CE5C1');
+    bg.setAttribute('stroke-width', '0.5');
+    bg.setAttribute('rx', '2');
+    textG.appendChild(bg);
+
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', ann.x);
+    txt.setAttribute('y', ann.y);
+    txt.setAttribute('class', 'text-annotation');
+    txt.setAttribute('font-size', '7');
+    txt.setAttribute('fill', '#4CE5C1');
+    txt.textContent=ann.text;
+    textG.appendChild(txt);
+
+    textG.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('annotation', idx);});
+    g.appendChild(textG);
+  });
+
+  // Symbols
+  LAYOUT.symbols.forEach((sym, idx)=>{
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', sym.x);
+    txt.setAttribute('y', sym.y);
+    txt.setAttribute('font-size', '16');
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('dominant-baseline', 'middle');
+    txt.setAttribute('cursor', 'pointer');
+    txt.textContent=sym.emoji;
+    txt.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('symbol', idx);});
+    g.appendChild(txt);
+  });
+
+  svg.appendChild(g);
+  applyVP();
+  updateStats();
+  renderRoster();
 }
 
-function updateCount(){
-  const desks=LAYOUT.desks.length;
-  const people=HC.length;
-  document.getElementById('deskCount').textContent=desks;
-  document.getElementById('peopleCount').textContent=people;
-  document.getElementById('itemCount').textContent=LAYOUT.desks.length+' desks, '+LAYOUT.collabTables.length+' tables';
+function updateStats(){
+  document.getElementById('deskCount').textContent=LAYOUT.desks.length;
+  const peopleCnt=HC.filter(r=>r.seat&&r.seat!=='WFH'&&r.seat!=='—'&&r.seat!=='Office'&&r.seat!=='Conf'&&r.name).length;
+  document.getElementById('peopleCount').textContent=peopleCnt;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// DRAG & DROP
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 10. DRAG & DROP
+// ══════════════════════════════════════════════════
 
-function startDragVertex(e, idx){
-  dragState={type:'vertex', idx, origX:LAYOUT.roomPoints[idx][0], origY:LAYOUT.roomPoints[idx][1]};
-  document.addEventListener('mousemove', handleDragVertex);
-  document.addEventListener('mouseup', endDrag);
+let draggedSymbol=null;
+
+function setupDragDrop(){
+  const list=document.getElementById('symbolList');
+  list.innerHTML='';
+
+  Object.entries(SYMBOL_CATEGORIES).forEach(([cat, emojis])=>{
+    const catDiv=document.createElement('div');
+    catDiv.className='symbol-category';
+
+    const title=document.createElement('div');
+    title.className='symbol-cat-title';
+    title.textContent=cat;
+    catDiv.appendChild(title);
+
+    emojis.forEach(emoji=>{
+      const item=document.createElement('div');
+      item.className='symbol-item';
+      item.textContent=emoji;
+      item.draggable=true;
+
+      item.addEventListener('dragstart', (e)=>{
+        draggedSymbol=emoji;
+        e.dataTransfer.effectAllowed='copy';
+      });
+
+      catDiv.appendChild(item);
+    });
+
+    list.appendChild(catDiv);
+  });
+
+  const svg=document.getElementById('floor-svg');
+  svg.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    e.dataTransfer.dropEffect='copy';
+  });
+
+  svg.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    if(!draggedSymbol||!isEditing) return;
+    const rect=svg.getBoundingClientRect();
+    const x=(e.clientX-rect.left)/vp.scale+vp.x;
+    const y=(e.clientY-rect.top)/vp.scale+vp.y;
+    LAYOUT.symbols.push({emoji:draggedSymbol, x, y});
+    pushHistory();
+    saveCurrentOfficeData();
+    renderAll();
+    draggedSymbol=null;
+  });
 }
 
-function handleDragVertex(e){
-  if(!dragState||dragState.type!=='vertex') return;
-  const [sx,sy]=svgPt(e);
-  LAYOUT.roomPoints[dragState.idx][0]=gridSnap?snapToGrid(sx):sx;
-  LAYOUT.roomPoints[dragState.idx][1]=gridSnap?snapToGrid(sy):sy;
-  renderRoom();
-  renderHandles();
-}
+// ══════════════════════════════════════════════════
+// 11. EDIT TOOLS
+// ══════════════════════════════════════════════════
 
-function startResizeDesk(e, idx){
-  dragState={type:'resizeDesk', idx, origW:LAYOUT.desks[idx].w, origH:LAYOUT.desks[idx].h};
-  document.addEventListener('mousemove', handleResizeDesk);
-  document.addEventListener('mouseup', endDrag);
-}
-
-function handleResizeDesk(e){
-  if(!dragState||dragState.type!=='resizeDesk') return;
-  const [sx,sy]=svgPt(e);
-  const d=LAYOUT.desks[dragState.idx];
-  d.w=Math.max(8, gridSnap?snapToGrid(sx-d.x):sx-d.x);
-  d.h=Math.max(8, gridSnap?snapToGrid(sy-d.y):sy-d.y);
-  renderDesks();
-  renderHandles();
-}
-
-function startDragWallEnd(e, idx, end){
-  dragState={type:'dragWallEnd', wallIdx:idx, end, origX1:LAYOUT.corridorWalls[idx].x1, origY1:LAYOUT.corridorWalls[idx].y1, origX2:LAYOUT.corridorWalls[idx].x2, origY2:LAYOUT.corridorWalls[idx].y2};
-  document.addEventListener('mousemove', handleDragWallEnd);
-  document.addEventListener('mouseup', endDrag);
-}
-
-function handleDragWallEnd(e){
-  if(!dragState||dragState.type!=='dragWallEnd') return;
-  const [sx,sy]=svgPt(e);
-  const w=LAYOUT.corridorWalls[dragState.wallIdx];
-  if(dragState.end===0){
-    w.x1=gridSnap?snapToGrid(sx):sx;
-    w.y1=gridSnap?snapToGrid(sy):sy;
-  }else{
-    w.x2=gridSnap?snapToGrid(sx):sx;
-    w.y2=gridSnap?snapToGrid(sy):sy;
-  }
-  renderCorridorWalls();
-  renderHandles();
-}
-
-function endDrag(){
-  document.removeEventListener('mousemove', handleDragVertex);
-  document.removeEventListener('mousemove', handleResizeDesk);
-  document.removeEventListener('mousemove', handleDragWallEnd);
-  document.removeEventListener('mouseup', endDrag);
-  if(dragState){
-    saveLayout();
-  }
-  dragState=null;
-}
-
-// Continue in next part...
-
-// ══════════════════════════════════════════════════════════════════════════════
-// EDIT TOOLS
-// ══════════════════════════════════════════════════════════════════════════════
-
-function toggleEditMode(){
-  editMode=!editMode;
-  document.getElementById('btnEdit').classList.toggle('on', editMode);
-  document.getElementById('editBadge').classList.toggle('on', editMode);
-  document.getElementById('editToolbar').classList.toggle('on', editMode);
-  clearSelection();
-  showEditPanel(null);
+function addDesk(){
+  const newId=Math.max(0, ...LAYOUT.desks.map(d=>d.id))+1;
+  LAYOUT.desks.push({id:newId, x:100, y:100, w:24, h:16});
+  pushHistory();
+  saveCurrentOfficeData();
   renderAll();
 }
 
-function toggleGrid(){
-  gridSnap=!gridSnap;
-  document.getElementById('btnGrid').classList.toggle('on', gridSnap);
-}
-
-function addNewDesk(){
+function addTable(){
+  const name='Table '+(LAYOUT.collabTables.length+1);
+  LAYOUT.collabTables.push({name, cx:150, cy:150, r:12});
   pushHistory();
-  const maxId=Math.max(...LAYOUT.desks.map(d=>d.id), 0);
-  LAYOUT.desks.push({id:maxId+1, x:100, y:100, w:24, h:16});
-  renderDesks();
-  saveLayout();
-}
-
-function addNewTable(){
-  pushHistory();
-  const maxIdx=LAYOUT.collabTables.length;
-  LAYOUT.collabTables.push({name:'Table '+(maxIdx+1), cx:100, cy:100, r:12});
-  renderTables();
-  saveLayout();
+  saveCurrentOfficeData();
+  renderAll();
 }
 
 function startWallDrawing(){
-  drawingWall=!drawingWall;
-  wallStart=null;
-  document.getElementById('btnDrawWall').classList.toggle('on', drawingWall);
-  if(!drawingWall) wallStart=null;
+  editMode=editMode==='wall'?null:'wall';
+  tempWallPts=[];
+  document.getElementById('btnDrawWall').classList.toggle('on', editMode==='wall');
 }
 
-function startTextMode(){
-  drawingText=!drawingText;
-  document.getElementById('btnAddText').classList.toggle('on', drawingText);
-}
-
-function deleteSelected(){
-  if(selection.length===0) return;
-  if(!confirm('Delete selected items?')) return;
+function addText(){
+  const text=prompt('Enter annotation text:');
+  if(!text) return;
+  LAYOUT.annotations.push({text, x:200, y:200, w:40});
   pushHistory();
-  
-  selection.forEach(sel=>{
-    if(sel.type==='desk'){
-      LAYOUT.desks.splice(sel.idx, 1);
-    }else if(sel.type==='tableCircle'){
-      LAYOUT.collabTables.splice(sel.idx, 1);
-    }else if(sel.type==='vertex'){
-      if(LAYOUT.roomPoints.length>3){
-        LAYOUT.roomPoints.splice(sel.idx, 1);
-      }
-    }else if(sel.type==='wall'){
-      LAYOUT.corridorWalls.splice(sel.idx, 1);
-    }else if(sel.type==='annotation'){
-      LAYOUT.annotations.splice(sel.idx, 1);
-    }
-  });
-  
-  clearSelection();
-  showEditPanel(null);
+  saveCurrentOfficeData();
   renderAll();
-  saveLayout();
 }
 
-function alignSelected(mode){
-  if(selection.length<2) return;
-  const items=selection.filter(s=>['desk','tableCircle'].includes(s.type)).map(s=>{
-    if(s.type==='desk'){
-      return {type:'desk', idx:s.idx, obj:LAYOUT.desks[s.idx]};
-    }else{
-      return {type:'tableCircle', idx:s.idx, obj:LAYOUT.collabTables[s.idx]};
-    }
-  });
-  if(items.length<2) return;
-  
+function deleteSel(){
+  if(!selectedId) return;
+  if(selectedType==='desk'){
+    LAYOUT.desks=LAYOUT.desks.filter(d=>d.id!==selectedId);
+  }else if(selectedType==='wall'){
+    LAYOUT.corridorWalls=LAYOUT.corridorWalls.filter((w,i)=>i!==selectedId);
+  }else if(selectedType==='annotation'){
+    LAYOUT.annotations=LAYOUT.annotations.filter((a,i)=>i!==selectedId);
+  }else if(selectedType==='symbol'){
+    LAYOUT.symbols=LAYOUT.symbols.filter((s,i)=>i!==selectedId);
+  }
+  clearSelection();
   pushHistory();
-  const minX=Math.min(...items.map(i=>i.obj.x||i.obj.cx-i.obj.r));
-  const maxX=Math.max(...items.map(i=>(i.obj.x||i.obj.cx)+((i.obj.w||i.obj.r*2))));
-  const minY=Math.min(...items.map(i=>i.obj.y||i.obj.cy-i.obj.r));
-  const maxY=Math.max(...items.map(i=>(i.obj.y||i.obj.cy)+((i.obj.h||i.obj.r*2))));
-  const cenX=(minX+maxX)/2;
-  const cenY=(minY+maxY)/2;
-  
-  items.forEach(i=>{
-    if(mode==='L') i.obj.x=minX;
-    if(mode==='R') i.obj.x=maxX-(i.obj.w||i.obj.r*2);
-    if(mode==='CX') i.obj.x=cenX-(i.obj.w||i.obj.r*2)/2;
-    if(mode==='T') i.obj.y=minY;
-    if(mode==='B') i.obj.y=maxY-(i.obj.h||i.obj.r*2);
-    if(mode==='CY') i.obj.y=cenY-(i.obj.h||i.obj.r*2)/2;
-  });
-  
-  renderDesks();
-  renderTables();
-  renderHandles();
-  saveLayout();
+  saveCurrentOfficeData();
+  renderAll();
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// EDIT PANEL DISPLAY
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 12. EDIT PANEL
+// ══════════════════════════════════════════════════
 
-function showEditPanel(item){
+function showEditPanel(type, id){
   const panel=document.getElementById('sidePanel');
-  const title=document.getElementById('panelTitle');
   const content=document.getElementById('panelContent');
-  
-  if(!item){
+  const title=document.getElementById('panelTitle');
+
+  if(!type||!isEditing){
     panel.classList.remove('open');
     return;
   }
-  
-  panel.classList.add('open');
+
+  title.textContent=type.toUpperCase();
   content.innerHTML='';
-  
-  if(item.type==='desk'){
-    const d=LAYOUT.desks[item.idx];
-    title.textContent='Desk '+d.id;
+
+  if(type==='desk'){
+    const desk=LAYOUT.desks.find(d=>d.id===id);
+    if(!desk) return;
+    const hcRow=HC.find(r=>r.seat===String(id));
+
     content.innerHTML=`
       <div class="panel-row">
-        <span class="panel-label">ID:</span>
-        <input class="panel-input" value="${d.id}" onchange="LAYOUT.desks[${item.idx}].id=parseInt(this.value);renderDesks();saveLayout();"/>
+        <span class="panel-label">Seat #</span>
+        <span class="panel-value">${id}</span>
       </div>
       <div class="panel-row">
-        <span class="panel-label">X:</span>
-        <input class="panel-input" value="${d.x}" onchange="LAYOUT.desks[${item.idx}].x=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+        <span class="panel-label">Name</span>
+        <input class="panel-input" type="text" id="panelName" value="${hcRow?hcRow.name:''}">
       </div>
       <div class="panel-row">
-        <span class="panel-label">Y:</span>
-        <input class="panel-input" value="${d.y}" onchange="LAYOUT.desks[${item.idx}].y=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+        <span class="panel-label">X</span>
+        <input class="panel-input" type="number" id="panelX" value="${desk.x}" step="1">
       </div>
       <div class="panel-row">
-        <span class="panel-label">Width:</span>
-        <input class="panel-input" value="${d.w}" onchange="LAYOUT.desks[${item.idx}].w=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+        <span class="panel-label">Y</span>
+        <input class="panel-input" type="number" id="panelY" value="${desk.y}" step="1">
       </div>
       <div class="panel-row">
-        <span class="panel-label">Height:</span>
-        <input class="panel-input" value="${d.h}" onchange="LAYOUT.desks[${item.idx}].h=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+        <span class="panel-label">W</span>
+        <input class="panel-input" type="number" id="panelW" value="${desk.w}" step="1">
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">H</span>
+        <input class="panel-input" type="number" id="panelH" value="${desk.h}" step="1">
       </div>
     `;
-  }else if(item.type==='tableCircle'){
-    const t=LAYOUT.collabTables[item.idx];
-    title.textContent=t.name;
-    content.innerHTML=`
-      <div class="panel-row">
-        <span class="panel-label">Name:</span>
-        <input class="panel-input" value="${t.name}" onchange="LAYOUT.collabTables[${item.idx}].name=this.value;renderTables();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">CX:</span>
-        <input class="panel-input" value="${t.cx}" onchange="LAYOUT.collabTables[${item.idx}].cx=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">CY:</span>
-        <input class="panel-input" value="${t.cy}" onchange="LAYOUT.collabTables[${item.idx}].cy=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">Radius:</span>
-        <input class="panel-input" value="${t.r}" onchange="LAYOUT.collabTables[${item.idx}].r=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
-      </div>
-    `;
-  }else if(item.type==='wall'){
-    const w=LAYOUT.corridorWalls[item.idx];
-    title.textContent='Wall';
-    content.innerHTML=`
-      <div class="panel-row">
-        <span class="panel-label">X1:</span>
-        <input class="panel-input" value="${w.x1}" onchange="LAYOUT.corridorWalls[${item.idx}].x1=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">Y1:</span>
-        <input class="panel-input" value="${w.y1}" onchange="LAYOUT.corridorWalls[${item.idx}].y1=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">X2:</span>
-        <input class="panel-input" value="${w.x2}" onchange="LAYOUT.corridorWalls[${item.idx}].x2=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">Y2:</span>
-        <input class="panel-input" value="${w.y2}" onchange="LAYOUT.corridorWalls[${item.idx}].y2=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
-      </div>
-    `;
-  }else if(item.type==='annotation'){
-    const a=LAYOUT.annotations[item.idx];
-    title.textContent='Annotation';
-    content.innerHTML=`
-      <div class="panel-row">
-        <span class="panel-label">Text:</span>
-        <input class="panel-input" value="${a.text}" onchange="LAYOUT.annotations[${item.idx}].text=this.value;renderAnnotations();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">X:</span>
-        <input class="panel-input" value="${a.x}" onchange="LAYOUT.annotations[${item.idx}].x=parseFloat(this.value);renderAnnotations();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">Y:</span>
-        <input class="panel-input" value="${a.y}" onchange="LAYOUT.annotations[${item.idx}].y=parseFloat(this.value);renderAnnotations();saveLayout();"/>
-      </div>
-      <div class="panel-row">
-        <span class="panel-label">Size:</span>
-        <input class="panel-input" value="${a.fontSize}" onchange="LAYOUT.annotations[${item.idx}].fontSize=parseFloat(this.value);renderAnnotations();saveLayout();"/>
-      </div>
-    `;
+
+    ['panelX', 'panelY', 'panelW', 'panelH'].forEach(id=>{
+      document.getElementById(id).addEventListener('change', (e)=>{
+        desk[id.replace('panel','').toLowerCase()]=parseFloat(e.target.value);
+        renderAll();
+        saveCurrentOfficeData();
+      });
+    });
   }
+
+  panel.classList.add('open');
 }
 
-function isDeskDimmed(seatId){
-  const hcSeat=HC.find(hc=>hc.seat==seatId);
-  if(!searchTerm&&activeDept==='ALL') return false;
-  if(searchTerm){
-    if(!hcSeat) return true;
-    const match=hcSeat.name.toLowerCase().includes(searchTerm.toLowerCase())||hcSeat.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return !match;
-  }
-  if(activeDept!=='ALL'){
-    if(!hcSeat) return activeDept!=='Unassigned';
-    return hcSeat.dept!==activeDept;
-  }
-  return false;
-}
-
-function filterDept(dept){
-  activeDept=dept;
-  renderDesks();
-  updateCount();
-}
-
-function handleSearch(val){
-  searchTerm=val;
-  renderDesks();
-  updateCount();
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// FLOOR CLICK HANDLER (walls, text, etc.)
-// ══════════════════════════════════════════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded', function(){
-  const svg=document.getElementById('floor-svg');
-  
-  svg.addEventListener('click', function(e){
-    if(e.target.tagName==='svg'||e.target.tagName==='polygon'){
-      clearSelection();
-      showEditPanel(null);
-      afterSelectionChange();
-      
-      if(drawingWall){
-        const [x,y]=svgPt(e);
-        if(!wallStart){
-          wallStart=[gridSnap?snapToGrid(x):x, gridSnap?snapToGrid(y):y];
-        }else{
-          pushHistory();
-          if(!LAYOUT.corridorWalls) LAYOUT.corridorWalls=[];
-          LAYOUT.corridorWalls.push({x1:wallStart[0], y1:wallStart[1], x2:gridSnap?snapToGrid(x):x, y2:gridSnap?snapToGrid(y):y});
-          wallStart=null;
-          renderCorridorWalls();
-          renderHandles();
-          saveLayout();
-        }
-      }
-      
-      if(drawingText){
-        const [x,y]=svgPt(e);
-        const text=prompt('Enter text:');
-        if(text){
-          pushHistory();
-          if(!LAYOUT.annotations) LAYOUT.annotations=[];
-          LAYOUT.annotations.push({id:Date.now(), x:gridSnap?snapToGrid(x):x, y:gridSnap?snapToGrid(y):y, text, fontSize:12});
-          renderAnnotations();
-          saveLayout();
-        }
-      }
-    }
-  });
-  
-  svg.addEventListener('dragover', (e)=>{e.preventDefault(); e.dataTransfer.dropEffect='copy';});
-  svg.addEventListener('drop', (e)=>{
-    e.preventDefault();
-    const data=e.dataTransfer.getData('text/json');
-    if(data){
-      try{
-        const obj=JSON.parse(data);
-        const [x,y]=svgPt(e);
-        if(obj.type==='symbol'){
-          pushHistory();
-          if(!LAYOUT.symbols) LAYOUT.symbols=[];
-          LAYOUT.symbols.push({id:Date.now(), x:gridSnap?snapToGrid(x):x, y:gridSnap?snapToGrid(y):y, svg:obj.svg, name:obj.name, w:20, h:20});
-          renderSymbols();
-          saveLayout();
-        }
-      }catch(err){}
-    }
-  });
+document.getElementById('panelClose')?.addEventListener('click', ()=>{
+  document.getElementById('sidePanel').classList.remove('open');
 });
 
-function renderSymbols(){
-  const svg=document.getElementById('floor-svg');
+// ══════════════════════════════════════════════════
+// 13. FILTERING & SEARCH
+// ══════════════════════════════════════════════════
+
+let currentSearch='';
+let activeDepts=new Set();
+
+function updateSearch(){
+  currentSearch=document.getElementById('searchInput').value.toLowerCase();
+  renderRoster();
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// ROSTER VIEW
-// ══════════════════════════════════════════════════════════════════════════════
+function toggleDept(dept){
+  if(activeDepts.has(dept)){
+    activeDepts.delete(dept);
+  }else{
+    activeDepts.add(dept);
+  }
+  renderRoster();
+}
+
+function renderDeptChips(){
+  const container=document.getElementById('deptChips');
+  container.innerHTML='';
+  Object.keys(DEPTS).forEach(dept=>{
+    const chip=document.createElement('div');
+    chip.className='chip';
+    if(activeDepts.has(dept)) chip.classList.add('active');
+    chip.textContent=dept;
+    chip.addEventListener('click', ()=>toggleDept(dept));
+    container.appendChild(chip);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// 14. ROSTER VIEW
+// ══════════════════════════════════════════════════
+
+let rosterSort='name';
 
 function renderRoster(){
-  const tbody=document.querySelector('#rosterTable tbody');
+  const tbody=document.getElementById('rosterBody');
   tbody.innerHTML='';
-  
-  let data=HC.slice();
-  if(searchTerm){
-    data=data.filter(r=>r.name.toLowerCase().includes(searchTerm.toLowerCase())||r.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  let filtered=HC.slice();
+
+  if(currentSearch){
+    filtered=filtered.filter(r=>
+      r.name.toLowerCase().includes(currentSearch)||
+      r.title.toLowerCase().includes(currentSearch)
+    );
   }
-  if(activeDept!=='ALL'){
-    data=data.filter(r=>r.dept===activeDept);
+
+  if(activeDepts.size>0){
+    filtered=filtered.filter(r=>activeDepts.has(r.dept));
   }
-  
-  data.sort((a,b)=>{
-    const col=rosterSort.col;
-    let aVal=a[col]||'';
-    let bVal=b[col]||'';
-    if(col==='seat'){
-      aVal=parseInt(aVal)||0;
-      bVal=parseInt(bVal)||0;
-    }
-    const cmp=aVal<bVal?-1:aVal>bVal?1:0;
-    return rosterSort.dir==='asc'?cmp:-cmp;
+
+  filtered.sort((a,b)=>{
+    if(rosterSort==='name') return a.name.localeCompare(b.name);
+    if(rosterSort==='dept') return a.dept.localeCompare(b.dept);
+    if(rosterSort==='title') return a.title.localeCompare(b.title);
+    if(rosterSort==='seat') return String(a.seat).localeCompare(String(b.seat));
+    if(rosterSort==='status') return (a.status||'').localeCompare(b.status||'');
+    return 0;
   });
-  
-  data.forEach(row=>{
-    const tr=el('tr', {}, tbody);
-    const cells=[row.seat, row.name, row.title, row.dept, row.seatNeeded, row.status];
-    cells.forEach(cell=>{
-      const td=el('td', {}, tr);
-      if(row.status==='OOO'){
-        td.innerHTML=`<span class="status-ooo">${row.status}</span>`;
-      }else if(row.status==='WFH'){
-        td.innerHTML=`<span class="status-wfh">${row.status}</span>`;
-      }else if(row.status==='VISITOR'){
-        td.innerHTML=`<span class="status-visitor">${row.status}</span>`;
-      }else{
-        td.textContent=cell;
-      }
-    });
+
+  filtered.forEach(row=>{
+    const tr=document.createElement('tr');
+    const statusBadge=row.status?`<span class="status-${row.status.toLowerCase()}">${row.status}</span>`:'';
+    tr.innerHTML=`
+      <td>${row.name}</td>
+      <td>${row.dept}</td>
+      <td>${row.title}</td>
+      <td>${row.seat}</td>
+      <td>${statusBadge}</td>
+    `;
+    tbody.appendChild(tr);
   });
-  
-  document.getElementById('itemCount').textContent=data.length+' people';
+
+  const cnt=filtered.length;
+  document.getElementById('itemCount').textContent=`${cnt} item${cnt!==1?'s':''}`;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// EVENT LISTENERS & INITIALIZATION
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// 15. EXPORT/IMPORT
+// ══════════════════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', function(){
-  initTheme();
-  initSymbolPanel();
-  
-  // View tabs
-  document.querySelectorAll('.view-tab').forEach(tab=>{
-    tab.addEventListener('click', function(){
-      const viewId=this.getAttribute('data-view');
-      currentView=viewId;
-      document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
-      this.classList.add('active');
-      document.querySelectorAll('.view-panel').forEach(p=>p.classList.remove('active'));
-      document.getElementById(viewId+'-view').classList.add('active');
-      if(viewId==='roster') renderRoster();
-    });
-  });
-  
-  // Search
-  document.getElementById('searchInput').addEventListener('input', (e)=>{
-    handleSearch(e.target.value);
-    if(currentView==='roster') renderRoster();
-  });
-  
-  // Dept chips
-  const deptChips=document.getElementById('deptChips');
-  const allChip=el('div', {className:'chip chip-all active'}, deptChips);
-  allChip.textContent='ALL';
-  allChip.addEventListener('click', ()=>{
-    document.querySelectorAll('#deptChips .chip').forEach(c=>c.classList.remove('active'));
-    allChip.classList.add('active');
-    filterDept('ALL');
-    if(currentView==='roster') renderRoster();
-  });
-  
-  Object.keys(DEPTS).forEach(dept=>{
-    const chip=el('div', {className:'chip'}, deptChips);
-    chip.textContent=dept;
-    chip.style.background='rgba(0,143,109,0.1)';
-    chip.style.color='var(--accent)';
-    chip.addEventListener('click', ()=>{
-      document.querySelectorAll('#deptChips .chip').forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-      filterDept(dept);
-      if(currentView==='roster') renderRoster();
-    });
-  });
-  
-  // Edit buttons
-  document.getElementById('btnEdit').addEventListener('click', toggleEditMode);
-  document.getElementById('btnUndo').addEventListener('click', undo);
-  document.getElementById('btnRedo').addEventListener('click', redo);
-  document.getElementById('btnAddDesk').addEventListener('click', addNewDesk);
-  document.getElementById('btnAddTable').addEventListener('click', addNewTable);
-  document.getElementById('btnDrawWall').addEventListener('click', startWallDrawing);
-  document.getElementById('btnAddText').addEventListener('click', startTextMode);
-  document.getElementById('btnGrid').addEventListener('click', toggleGrid);
-  document.getElementById('btnDelete').addEventListener('click', deleteSelected);
-  document.getElementById('btnAlignL').addEventListener('click', ()=>alignSelected('L'));
-  document.getElementById('btnAlignCX').addEventListener('click', ()=>alignSelected('CX'));
-  document.getElementById('btnAlignR').addEventListener('click', ()=>alignSelected('R'));
-  document.getElementById('btnAlignT').addEventListener('click', ()=>alignSelected('T'));
-  document.getElementById('btnAlignCY').addEventListener('click', ()=>alignSelected('CY'));
-  document.getElementById('btnAlignB').addEventListener('click', ()=>alignSelected('B'));
-  document.getElementById('btnZoomIn').addEventListener('click', ()=>zoomStep(1));
-  document.getElementById('btnZoomOut').addEventListener('click', ()=>zoomStep(-1));
-  
-  // Side panel close
-  document.getElementById('panelClose').addEventListener('click', ()=>{
-    document.getElementById('sidePanel').classList.remove('open');
-  });
-  
-  // Roster table sorting
-  document.querySelectorAll('#rosterTable th').forEach(th=>{
-    th.addEventListener('click', function(){
-      const col=this.getAttribute('data-col');
-      if(rosterSort.col===col){
-        rosterSort.dir=rosterSort.dir==='asc'?'desc':'asc';
-      }else{
-        rosterSort.col=col;
-        rosterSort.dir='asc';
-      }
-      renderRoster();
-    });
-  });
-  
-  renderAll();
-  applyVP();
-  updateUndoRedoBtns();
-});
-
-// ══════════════════════════════════════════════════════════════════════════════
-// JSON EXPORT / IMPORT
-// ══════════════════════════════════════════════════════════════════════════════
 function exportJSON(){
+  const office=OFFICES.find(o=>o.id===currentOfficeId);
   const data={
-    version:'floorcraft-v7',
-    exportedAt:new Date().toISOString(),
-    layout:deepClone(LAYOUT),
-    headcount:deepClone(HC),
+    office: {id:currentOfficeId, name:office.name, emoji:office.emoji},
+    layout: LAYOUT,
+    headcount: HC,
   };
-  const blob=new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const json=JSON.stringify(data, null, 2);
+  const blob=new Blob([json], {type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download='floorcraft-layout-'+new Date().toISOString().slice(0,10)+'.json';
+  a.download=`floorcraft-${currentOfficeId}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-function importJSON(file){
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const data=JSON.parse(e.target.result);
-      if(data.layout){
-        pushHistory();
-        // Merge layout data
-        Object.assign(LAYOUT, data.layout);
-        if(!LAYOUT.symbols) LAYOUT.symbols=[];
-        if(!LAYOUT.annotations) LAYOUT.annotations=[];
-        saveLayout();
+function importJSON(){
+  const input=document.createElement('input');
+  input.type='file';
+  input.accept='.json';
+  input.addEventListener('change', (e)=>{
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.layout||!data.office) throw new Error('Invalid file format');
+        LAYOUT=data.layout;
+        HC=data.headcount||[];
+        clearSelection();
+        showEditPanel(null);
+        history_stack=[];
+        historyIdx=-1;
+        renderAll();
+        saveCurrentOfficeData();
+      }catch(err){
+        alert('Error importing: '+err.message);
       }
-      if(data.headcount){
-        HC.length=0;
-        data.headcount.forEach(r=>HC.push(r));
-        saveHC();
-      }
-      renderAll();
-      renderRoster();
-      alert('Layout imported successfully!');
-    }catch(err){
-      alert('Error importing file: '+err.message);
-    }
-  };
-  reader.readAsText(file);
+    };
+    reader.readAsText(file);
+  });
+  input.click();
 }
 
-document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
-document.getElementById('btnImportJSON').addEventListener('click', function(){
-  document.getElementById('jsonFileInput').click();
-});
-document.getElementById('jsonFileInput').addEventListener('change', function(e){
-  if(e.target.files[0]) importJSON(e.target.files[0]);
-  e.target.value=''; // reset so same file can be re-imported
-});
+// ══════════════════════════════════════════════════
+// 16. EVENT LISTENERS & INIT
+// ══════════════════════════════════════════════════
 
-// ══════════════════════════════════════════════════════════════════════════════
-// PNG EXPORT
-// ══════════════════════════════════════════════════════════════════════════════
-function exportPNG(){
-  const svgEl=document.getElementById('floor-svg');
-  const vp=document.getElementById('vp');
-  // Temporarily reset viewport for clean export
-  const origTransform=vp.getAttribute('transform');
-  vp.setAttribute('transform','translate(20,20) scale(1)');
+document.addEventListener('DOMContentLoaded', ()=>{
+  initTheme();
+  initializeOffices();
+  loadOfficeData(currentOfficeId);
 
-  const svgClone=svgEl.cloneNode(true);
-  svgClone.setAttribute('width','820');
-  svgClone.setAttribute('height','740');
-  svgClone.setAttribute('viewBox','0 0 820 740');
-  // Remove handles, guides, rubber band, ghost layers from clone
-  ['handles-layer','guide-layer','rubber-layer','ghost-layer'].forEach(id=>{
-    const layer=svgClone.querySelector('#'+id);
-    if(layer) layer.innerHTML='';
+  // Theme
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  // Office dropdown
+  const dropdown=document.getElementById('officeDropdown');
+  const menu=document.getElementById('officeMenu');
+  const list=document.getElementById('officeList');
+
+  dropdown.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    menu.classList.toggle('hidden');
   });
 
-  const svgData=new XMLSerializer().serializeToString(svgClone);
-  const svgBlob=new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
-  const url=URL.createObjectURL(svgBlob);
+  document.addEventListener('click', ()=>menu.classList.add('hidden'));
 
-  const img=new Image();
-  img.onload=function(){
-    const canvas=document.createElement('canvas');
-    canvas.width=1640; // 2x for retina
-    canvas.height=1480;
-    const ctx=canvas.getContext('2d');
-    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim()||'#0A1F1D';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(img, 0, 0, 1640, 1480);
+  menu.addEventListener('click', (e)=>e.stopPropagation());
 
-    canvas.toBlob(function(blob){
-      const a=document.createElement('a');
-      a.href=URL.createObjectURL(blob);
-      a.download='floorcraft-'+new Date().toISOString().slice(0,10)+'.png';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    },'image/png');
-    URL.revokeObjectURL(url);
-  };
-  img.src=url;
+  list.addEventListener('click', (e)=>{
+    if(e.target.closest('.office-dropdown-item')){
+      const item=e.target.closest('.office-dropdown-item');
+      const officeId=item.dataset.officeId;
+      if(officeId) switchOffice(officeId);
+      menu.classList.add('hidden');
+    }
+  });
 
-  // Restore viewport
-  vp.setAttribute('transform', origTransform);
-}
+  document.getElementById('newOfficeBtn').addEventListener('click', ()=>{
+    const name=prompt('Office name:', 'New Office');
+    if(name) createOffice(name, '🏢');
+    menu.classList.add('hidden');
+  });
 
-document.getElementById('btnExportPNG').addEventListener('click', exportPNG);
+  updateOfficeDropdown();
 
-// ══════════════════════════════════════════════════════════════════════════════
-// KEYBOARD SHORTCUTS
-// ══════════════════════════════════════════════════════════════════════════════
-document.addEventListener('keydown', function(e){
-  const tag=document.activeElement.tagName;
-  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
-
-  // ? key → show shortcut overlay
-  if(e.key==='?'||e.key==='/'){
-    const overlay=document.getElementById('shortcutOverlay');
-    overlay.style.display=overlay.style.display==='none'?'flex':'none';
-    e.preventDefault();
-    return;
-  }
-
-  if(e.key==='Escape'){
-    // Close shortcut overlay if open
-    document.getElementById('shortcutOverlay').style.display='none';
-    drawingWall=false;
-    drawingText=false;
-    document.getElementById('btnDrawWall').classList.remove('on');
-    document.getElementById('btnAddText').classList.remove('on');
-    clearSelection();
-    showEditPanel(null);
-    afterSelectionChange();
-  }
-  if(e.key==='Delete'||e.key==='Backspace') deleteSelected();
-  if(e.ctrlKey||e.metaKey){
-    if(e.key==='z'){e.preventDefault(); undo();}
-    if(e.key==='y'){e.preventDefault(); redo();}
-    if(e.key==='s'){e.preventDefault(); saveLayout();}
-  }
-  if(e.key==='e') toggleEditMode();
-  if(e.key==='g') toggleGrid();
-
-  // Arrow keys nudge
-  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&selection.length>0){
-    e.preventDefault();
-    const step=e.shiftKey?10:1;
-    const dx=e.key==='ArrowLeft'?-step:e.key==='ArrowRight'?step:0;
-    const dy=e.key==='ArrowUp'?-step:e.key==='ArrowDown'?step:0;
-    pushHistory();
-    selection.forEach(s=>{
-      if(s.type==='desk'){const d=LAYOUT.desks[s.idx];d.x+=dx;d.y+=dy;}
-      if(s.type==='tableCircle'){const t=LAYOUT.collabTables[s.idx];t.cx+=dx;t.cy+=dy;}
-      if(s.type==='confRoom'){const r=LAYOUT.confRooms[s.idx];r.x+=dx;r.y+=dy;}
-      if(s.type==='annotation'){const a=LAYOUT.annotations[s.idx];a.x+=dx;a.y+=dy;}
-      if(s.type==='corridorWall'){const w=LAYOUT.corridorWalls[s.idx];w.x1+=dx;w.y1+=dy;w.x2+=dx;w.y2+=dy;}
+  // Views
+  document.querySelectorAll('.view-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.view+'-view').classList.add('active');
     });
-    renderAll();
-  }
-});
+  });
 
+  // Edit toolbar
+  document.getElementById('btnEdit').addEventListener('click', toggleEditMode);
+  document.getElementById('btnUndo').addEventListener('click', undo);
+  document.getElementById('btnRedo').addEventListener('click', redo);
+  document.getElementById('btnAddDesk').addEventListener('click', addDesk);
+  document.getElementById('btnAddTable').addEventListener('click', addTable);
+  document.getElementById('btnDrawWall').addEventListener('click', startWallDrawing);
+  document.getElementById('btnAddText').addEventListener('click', addText);
+  document.getElementById('btnDeleteSel').addEventListener('click', deleteSel);
+  document.getElementById('btnZoomIn').addEventListener('click', zoomIn);
+  document.getElementById('btnZoomOut').addEventListener('click', zoomOut);
+  document.getElementById('btnResetLayout').addEventListener('click', ()=>{
+    if(confirm('Reset current office to blank?')){
+      LAYOUT=blankLayout();
+      HC=[];
+      clearSelection();
+      showEditPanel(null);
+      history_stack=[];
+      historyIdx=-1;
+      renderAll();
+      saveCurrentOfficeData();
+    }
+  });
+  document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+  document.getElementById('btnImportJSON').addEventListener('click', importJSON);
+
+  // Search & filtering
+  document.getElementById('searchInput').addEventListener('input', updateSearch);
+  renderDeptChips();
+
+  // Roster sorting
+  document.querySelectorAll('.roster-table th').forEach(th=>{
+    th.addEventListener('click', ()=>{
+      const sort=th.dataset.sort;
+      rosterSort=rosterSort===sort?sort:sort;
+      renderRoster();
+    });
+  });
+
+  // Canvas
+  document.getElementById('floor-svg').addEventListener('click', ()=>{
+    if(isEditing) clearSelection();
+  });
+
+  document.getElementById('floor-svg').addEventListener('mousedown', (e)=>{
+    if(e.button!==0||editMode!=='wall') return;
+    const rect=document.getElementById('floor-svg').getBoundingClientRect();
+    const x=(e.clientX-rect.left)/vp.scale+vp.x;
+    const y=(e.clientY-rect.top)/vp.scale+vp.y;
+    tempWallPts.push({x, y});
+
+    if(tempWallPts.length>=2){
+      const pt1=tempWallPts[tempWallPts.length-2];
+      const pt2=tempWallPts[tempWallPts.length-1];
+      LAYOUT.corridorWalls.push({x1:pt1.x, y1:pt1.y, x2:pt2.x, y2:pt2.y});
+      pushHistory();
+      saveCurrentOfficeData();
+      renderAll();
+    }
+  });
+
+  // Pan & zoom
+  let isPanning=false, panStartX, panStartY;
+
+  document.getElementById('floor-svg').addEventListener('mousedown', (e)=>{
+    if(e.button!==1&&!(e.button===0&&e.shiftKey)) return;
+    isPanning=true;
+    panStartX=e.clientX;
+    panStartY=e.clientY;
+  });
+
+  document.addEventListener('mousemove', (e)=>{
+    if(!isPanning) return;
+    const dx=(e.clientX-panStartX)/vp.scale;
+    const dy=(e.clientY-panStartY)/vp.scale;
+    vp.x-=dx;
+    vp.y-=dy;
+    applyVP();
+    panStartX=e.clientX;
+    panStartY=e.clientY;
+  });
+
+  document.addEventListener('mouseup', ()=>isPanning=false);
+
+  document.getElementById('floor-svg').addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    if(e.deltaY<0) zoomIn();
+    else zoomOut();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e)=>{
+    if(e.code==='Space') {isPanning=true; panStartX=e.clientX; panStartY=e.clientY;}
+    if(e.code==='Escape') {editMode=null; clearSelection(); renderAll();}
+    if(e.code==='Delete') deleteSel();
+    if(e.ctrlKey||e.metaKey){
+      if(e.code==='KeyZ') undo();
+      if(e.code==='KeyY') redo();
+    }
+  });
+
+  document.addEventListener('keyup', (e)=>{
+    if(e.code==='Space') isPanning=false;
+  });
+
+  setupDragDrop();
+  renderAll();
+  renderRoster();
+});
 </script>
 </body>
 </html>
