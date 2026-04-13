@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FloorCraft by Aircall</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Dark mode (default) */
+  --bg: #011310;
+  --surface: #002620;
+  --surface2: #216358;
+  --border: #4C7F77;
+  --text: #FAFBFD;
+  --text-dim: #CED8D7;
+  --text-muted: #749E98;
+  --accent: #008F6D;
+  --accent-hover: #056A52;
+  --bright-green: #4CE5C1;
+  --blue: #3F52CF;
+  --teal: #56B0C4;
+  --purple: #8546CC;
+  --orange: #F18424;
+  --pink: #D4418A;
+  
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: system-ui, -apple-system, sans-serif;
+  --font-display: Georgia, serif;
+  
+  --canvas-bg: #0A1F1D;
+}
+
+html.light-mode {
+  --bg: #FAFBFD;
+  --surface: #FFFFFF;
+  --surface2: #F3F7F6;
+  --border: #E5EAE9;
+  --text: #002620;
+  --text-dim: #3D6B65;
+  --text-muted: #749E98;
+  --accent: #008F6D;
+  --accent-hover: #056A52;
+  --canvas-bg: #F0F5F3;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ─── Header ─── */
+header {
+  background: var(--surface);
+  color: var(--text);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.logo em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.logo-subtitle {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: 4px;
+}
+
+.stat-pills {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.stat-pill {
+  background: rgba(0, 143, 109, 0.15);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.stat-pill b {
+  font-size: 13px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.theme-toggle {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--border);
+}
+
+.edit-badge {
+  background: var(--orange);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  display: none;
+  letter-spacing: 0.4px;
+}
+
+.edit-badge.on {
+  display: inline;
+}
+
+/* ─── Tabs ─── */
+.view-tabs {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: background-color 0.3s;
+}
+
+.view-tab {
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.view-tab:hover {
+  color: var(--text);
+}
+
+.view-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ─── Controls bar ─── */
+.controls {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  transition: background-color 0.3s;
+}
+
+.search-wrap {
+  position: relative;
+}
+
+.search-wrap input {
+  padding: 6px 28px 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  width: 190px;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  transition: border-color 0.2s;
+}
+
+.search-wrap input:focus {
+  border-color: var(--accent);
+}
+
+.search-wrap input::placeholder {
+  color: var(--text-muted);
+}
+
+.s-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-size: 13px;
+}
+
+.filter-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.chips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  opacity: 0.7;
+  transition: all 0.15s;
+  font-family: var(--font-mono);
+  background: var(--surface2);
+  color: var(--text-muted);
+}
+
+.chip:hover {
+  opacity: 1;
+}
+
+.chip.active {
+  opacity: 1;
+  background: var(--accent);
+  color: #fff;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.cnt {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ─── Edit toolbar ─── */
+#editToolbar {
+  background: rgba(0, 143, 109, 0.08);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 14px;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#editToolbar.on {
+  display: flex;
+}
+
+.et-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.eb {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  user-select: none;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.eb:hover:not(:disabled) {
+  background: var(--surface2);
+  border-color: var(--accent);
+}
+
+.eb:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.eb-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.eb-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.eb-warn {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.eb-toggle {
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.eb-toggle.on {
+  background: var(--accent);
+  color: #fff;
+}
+
+.et-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.et-hint {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: 6px;
+}
+
+.key {
+  display: inline-block;
+  background: rgba(0, 143, 109, 0.2);
+  color: var(--bright-green);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+#alignRow {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+#alignRow.visible {
+  display: flex;
+}
+
+.zoom-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.zoom-pct {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ─── App body ─── */
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.view-panel {
+  display: none;
+  flex: 1;
+  overflow: hidden;
+  transition: background-color 0.3s;
+}
+
+.view-panel.active {
+  display: flex;
+}
+
+/* ─── MAP view ─── */
+#map-view {
+  flex-direction: row;
+}
+
+.symbol-panel {
+  width: 200px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.symbol-header {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.symbol-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.symbol-category {
+  margin-bottom: 12px;
+}
+
+.symbol-cat-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.symbol-item {
+  padding: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: move;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.symbol-item:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.floor-wrap {
+  flex: 1;
+  overflow: hidden;
+  background: var(--canvas-bg);
+  position: relative;
+  cursor: default;
+  transition: background-color 0.3s;
+}
+
+#floor-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* SVG element styles */
+.desk-g {
+  cursor: pointer;
+}
+
+.desk-g.dimmed {
+  opacity: 0.1;
+}
+
+.desk-body {
+  transition: stroke 0.1s, stroke-width 0.1s, filter 0.1s;
+}
+
+.desk-g:not(.dimmed):hover .desk-body {
+  filter: brightness(1.2);
+}
+
+.desk-g.selected .desk-body {
+  stroke: var(--accent) !important;
+  stroke-width: 2.5 !important;
+}
+
+.desk-lbl {
+  font: 700 8px var(--font-body);
+  fill: #fff;
+  pointer-events: none;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.desk-num {
+  font: 600 7px var(--font-mono);
+  fill: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.room-lbl {
+  font: italic 9px var(--font-body);
+  fill: var(--text-muted);
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.zone-lbl {
+  font: 700 9px var(--font-mono);
+  fill: #B0C4BE;
+  pointer-events: none;
+  text-anchor: middle;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.v-handle {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5;
+  cursor: grab;
+  opacity: 0.85;
+}
+
+.v-handle:hover {
+  opacity: 1;
+  fill: var(--accent-hover);
+}
+
+.resize-handle {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1;
+  cursor: se-resize;
+  opacity: 0.9;
+}
+
+.resize-handle:hover {
+  opacity: 1;
+}
+
+.ghost-desk {
+  fill: rgba(0, 143, 109, 0.15);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 5, 3;
+  pointer-events: none;
+}
+
+.snap-line {
+  stroke: var(--bright-green);
+  stroke-width: 1;
+  stroke-dasharray: 3, 2;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.wall {
+  stroke: var(--border);
+  stroke-width: 2;
+  fill: none;
+}
+
+.wall.selected {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.wall-label {
+  font: 9px var(--font-mono);
+  fill: var(--text-muted);
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.text-annotation {
+  cursor: pointer;
+  user-select: none;
+}
+
+.text-annotation-g {
+  cursor: move;
+}
+
+.text-annotation-g.selected rect {
+  stroke: var(--accent);
+  stroke-width: 1;
+}
+
+/* ─── ROSTER view ─── */
+#roster-view {
+  flex-direction: column;
+}
+
+.roster-table {
+  flex: 1;
+  overflow: auto;
+  font-size: 11px;
+}
+
+.roster-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+}
+
+.roster-table th {
+  background: var(--surface2);
+  color: var(--text);
+  padding: 6px 8px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.roster-table th:hover {
+  background: var(--border);
+}
+
+.roster-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
+.roster-table tr:hover {
+  background: var(--surface2);
+}
+
+.status-ooo {
+  background: rgba(212, 65, 138, 0.2);
+  color: var(--pink);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.status-wfh {
+  background: rgba(84, 176, 196, 0.2);
+  color: var(--teal);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.status-visitor {
+  background: rgba(241, 132, 36, 0.2);
+  color: var(--orange);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* ─── Modal & Panels ─── */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 143, 109, 0.15);
+}
+
+.modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.btn:hover {
+  background: var(--border);
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-warn {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+/* ─── Side panel ─── */
+#sidePanel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 100%;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  transform: translateX(320px);
+  transition: transform 0.3s;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+#sidePanel.open {
+  transform: translateX(0);
+}
+
+.panel-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+
+.panel-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.panel-content {
+  padding: 12px;
+}
+
+.panel-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 11px;
+}
+
+.panel-label {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  min-width: 70px;
+}
+
+.panel-value {
+  flex: 1;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.panel-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+kbd {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text);
+  min-width: 24px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Floor<em>Craft</em><span class="logo-subtitle">by Aircall</span></div>
+  <div class="stat-pills">
+    <div class="stat-pill">Desks: <b id="deskCount">0</b></div>
+    <div class="stat-pill">People: <b id="peopleCount">0</b></div>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
+    <span class="edit-badge" id="editBadge">EDIT</span>
+  </div>
+</header>
+
+<div class="view-tabs">
+  <div class="view-tab active" data-view="map">MAP</div>
+  <div class="view-tab" data-view="roster">ROSTER</div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search name..." />
+    <span class="s-icon">🔍</span>
+  </div>
+  <span class="filter-lbl">DEPT</span>
+  <div class="chips" id="deptChips"></div>
+  <div class="spacer"></div>
+  <span class="cnt" id="itemCount">0 items</span>
+</div>
+
+<div id="editToolbar">
+  <div class="et-row">
+    <button class="eb eb-primary" id="btnEdit">EDIT ON</button>
+    <button class="eb eb-neutral" id="btnUndo" disabled>↶ Undo</button>
+    <button class="eb eb-neutral" id="btnRedo" disabled>↷ Redo</button>
+    <button class="eb eb-neutral" id="btnAddDesk">+ Desk</button>
+    <button class="eb eb-neutral" id="btnAddTable">⭕ Table</button>
+    <button class="eb eb-neutral" id="btnDrawWall">✏ Wall</button>
+    <button class="eb eb-neutral" id="btnAddText">T Text</button>
+    <button class="eb eb-neutral" id="btnAddVertex">+ Vertex</button>
+    <div class="et-sep"></div>
+    <button class="eb eb-neutral" id="btnGrid">Grid</button>
+    <button class="eb eb-warn" id="btnDelete" disabled>Delete</button>
+  </div>
+  <div class="et-row">
+    <div id="alignRow">
+      <button class="eb eb-align" id="btnAlignL">L</button>
+      <button class="eb eb-align" id="btnAlignCX">CX</button>
+      <button class="eb eb-align" id="btnAlignR">R</button>
+      <button class="eb eb-align" id="btnAlignT">T</button>
+      <button class="eb eb-align" id="btnAlignCY">CY</button>
+      <button class="eb eb-align" id="btnAlignB">B</button>
+      <span class="et-hint">Align selected</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="et-sep"></div>
+    <button class="eb eb-neutral" id="btnExportJSON" title="Export layout as JSON">⬇ JSON</button>
+    <button class="eb eb-neutral" id="btnImportJSON" title="Import layout from JSON">⬆ JSON</button>
+    <input type="file" id="jsonFileInput" accept=".json" style="display:none">
+    <button class="eb eb-neutral" id="btnExportPNG" title="Export floor plan as PNG">📷 PNG</button>
+    <div class="et-sep"></div>
+    <div class="zoom-ctrl">
+      <button class="eb eb-neutral" id="btnZoomOut">−</button>
+      <span class="zoom-pct" id="zoomPct">100%</span>
+      <button class="eb eb-neutral" id="btnZoomIn">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard Shortcut Overlay -->
+<div class="modal-backdrop" id="shortcutOverlay" style="display:none">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title">Keyboard Shortcuts</div>
+      <button class="modal-close" onclick="document.getElementById('shortcutOverlay').style.display='none'">&times;</button>
+    </div>
+    <div class="modal-body" style="padding:16px;font-size:12px;line-height:2;font-family:var(--font-mono);">
+      <div style="margin-bottom:12px;font-weight:600;color:var(--accent);">Navigation</div>
+      <div><kbd>Space + Drag</kbd> — Pan the canvas</div>
+      <div><kbd>Scroll Wheel</kbd> — Zoom in/out</div>
+      <div><kbd>E</kbd> — Toggle edit mode</div>
+      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">Editing</div>
+      <div><kbd>Ctrl+Z</kbd> — Undo</div>
+      <div><kbd>Ctrl+Y</kbd> — Redo</div>
+      <div><kbd>Delete</kbd> — Delete selected</div>
+      <div><kbd>G</kbd> — Toggle grid snap</div>
+      <div><kbd>Arrow Keys</kbd> — Nudge selected (Shift = 10px)</div>
+      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">Selection</div>
+      <div><kbd>Shift + Click</kbd> — Multi-select</div>
+      <div><kbd>Click + Drag</kbd> — Rubber band select</div>
+      <div><kbd>Escape</kbd> — Clear selection / cancel tool</div>
+      <div style="margin:12px 0 12px;font-weight:600;color:var(--accent);">General</div>
+      <div><kbd>?</kbd> — Show this overlay</div>
+    </div>
+  </div>
+</div>
+
+<div class="app-body">
+  <div id="map-view" class="view-panel active">
+    <div class="symbol-panel" id="symbolPanel">
+      <div class="symbol-header">Symbols</div>
+      <div class="symbol-list" id="symbolList"></div>
+    </div>
+    <div class="floor-wrap">
+      <svg id="floor-svg" data-width="500" data-height="300"></svg>
+    </div>
+  </div>
+  <div id="roster-view" class="view-panel">
+    <div class="roster-table">
+      <table id="rosterTable">
+        <thead>
+          <tr>
+            <th data-col="seat">SEAT</th>
+            <th data-col="name">NAME</th>
+            <th data-col="title">TITLE</th>
+            <th data-col="dept">DEPT</th>
+            <th data-col="seatNeeded">NEEDED</th>
+            <th data-col="status">STATUS</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div id="sidePanel" class="side-panel">
+  <div class="panel-header">
+    <div class="panel-title" id="panelTitle"></div>
+    <button class="panel-close" id="panelClose">&times;</button>
+  </div>
+  <div class="panel-content" id="panelContent"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA STRUCTURES (from original, preserved exactly)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const DEPTS={
+  'Management':        {color:'#8546CC', fg:'#fff'},
+  'Engineering':       {color:'#3F52CF', fg:'#fff'},
+  'Product':           {color:'#56B0C4', fg:'#fff'},
+  'Product Marketing': {color:'#F18424', fg:'#fff'},
+  'Demand Generation': {color:'#D4418A', fg:'#fff'},
+  'Finance':           {color:'#008F6D', fg:'#fff'},
+  'Account Executives':{color:'#00C6FF', fg:'#000'},
+  'Success':           {color:'#74C7B7', fg:'#000'},
+  'Data':              {color:'#9D50DD', fg:'#fff'},
+  'Security':          {color:'#FF6B6B', fg:'#fff'},
+  'HR Ops':            {color:'#A0D995', fg:'#000'},
+  'Core Tech IT':      {color:'#667BC6', fg:'#fff'},
+  'Talent Acquisition':{color:'#FFA94D', fg:'#000'},
+  'Onboarding':        {color:'#4FA3A3', fg:'#fff'},
+  'Legal':             {color:'#C9184A', fg:'#fff'},
+  'Unassigned':        {color:'#888', fg:'#fff'},
+};
+
+const SEATS={
+  1: {name:'Coltin Kinsey',         dept:'Management',        title:'Chief of Staff, Business Units'},
+  2: {name:'Michael Atchoo',        dept:'Management',        title:'Chief of Staff'},
+  3: {name:'Nick Carey',            dept:'Product Marketing', title:'Lead Product Marketing Manager'},
+  4: {name:'Greg Banks',            dept:'Talent Acquisition',title:'Talent Acquisition Specialist'},
+  5: {name:'Brianne Edwards',       dept:'Management',        title:'Executive Business Partner'},
+  6: {name:'Jean Soong',            dept:'Management',        title:'Executive Business Partner'},
+  7: {name:'Anastasia Parsons',     dept:'Management',        title:'Executive Coordinator'},
+  8: {name:'Maggie McCarthy',       dept:'Demand Generation', title:'Global Partner Marketing Program Manager'},
+  9: {name:'Brendan Lee',           dept:'Unassigned',        title:'Contract'},
+  10:{name:'Bryan Gilligan',        dept:'Demand Generation', title:'Visual Designer'},
+  11:{name:'KJ Singh',              dept:'Product',           title:'Director of Product, App Ecosystem'},
+  12:{name:'Lauren Harrington',     dept:'Product',           title:'Senior Product Manager'},
+  13:{name:'Carlene Reyes',         dept:'Product Marketing', title:'Senior Customer Marketing Manager'},
+  14:{name:'Trenton Erker',         dept:'Demand Generation', title:'SEO & AI Search Strategy Lead'},
+  15:{name:'Trent Morris',          dept:'Demand Generation', title:'Growth Marketing Manager'},
+  16:{name:'Cade McNelly',          dept:'Demand Generation', title:'Digital Content Producer'},
+  17:{name:'Ravi Kiran Kethamakka', dept:'Engineering',       title:'Backend/AI Engineering'},
+  18:{name:'',                      dept:'Unassigned',        title:''},
+  19:{name:'Taran Bains',           dept:'Engineering',       title:'Junior Software Engineer'},
+  20:{name:'Sai Arun Reddy Katipally',dept:'Engineering',     title:'Junior Software Engineer'},
+  21:{name:'Debayan Datta',         dept:'Engineering',       title:'Junior Software Engineer'},
+  22:{name:'',                      dept:'Unassigned',        title:''},
+  23:{name:'Matthew Watson',        dept:'Finance',           title:'Strategic Pricing Manager'},
+  24:{name:'Jeff Piaquadio',        dept:'Finance',           title:'Director FP&A'},
+  25:{name:'Buay Ruot',             dept:'Account Executives',title:'Account Manager - Seattle'},
+  26:{name:'Natalie Desjardins',    dept:'Account Executives',title:'Senior Account Manager - Seattle'},
+  27:{name:'Mike Winkler',          dept:'Success',           title:'Account Manager'},
+  28:{name:'Brady Thomas',          dept:'Success',           title:'Account Manager - Seattle'},
+  29:{name:'Ariel Dompier',         dept:'Success',           title:'Account Manager'},
+  30:{name:'Alissa Swartz',         dept:'Account Executives',title:'Corporate Account Executive'},
+  31:{name:'Stephen Wong',          dept:'Demand Generation', title:'Website Developer, Associate'},
+  32:{name:'Deepanshu Sandhuria',   dept:'Engineering',       title:'Engineering Manager'},
+  33:{name:'Prathamesh Chitodkar',  dept:'Security',          title:'Engineering Manager'},
+  34:{name:'Claire Wang',           dept:'Engineering',       title:'Senior Software Engineer'},
+  35:{name:'Robert Casto',          dept:'Core Tech IT',      title:'IT Operations Manager'},
+  36:{name:'Ravi Ghanta',           dept:'Core Tech IT',      title:'Director of Internal Productivity & IT'},
+  37:{name:'Harsh Bajaj',           dept:'Engineering',       title:'Senior Software Engineer, Integrations'},
+  38:{name:'Nagendra Gupta',        dept:'Data',              title:'Data Engineering Manager'},
+  39:{name:'Christopher Bukavich',  dept:'Security',          title:'Senior Security Engineer'},
+  40:{name:'Jazmine McGinnis',      dept:'Onboarding',        title:'Staff CE'},
+  41:{name:'Ashley Hwang',          dept:'Unassigned',        title:'Interim'},
+  42:{name:'Alex Yang',             dept:'Engineering',       title:'Software Engineer'},
+  43:{name:'Cate Elliott',          dept:'HR Ops',            title:'HR Operations Specialist'},
+  44:{name:'Marine Viet',           dept:'Demand Generation', title:'Intern, Marketing Programs'},
+};
+
+const HEADCOUNT_DEFAULT=[
+  {seat:'1', name:'Coltin Kinsey',            title:'Chief of Staff, Business Units',           dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'2', name:'Michael Atchoo',           title:'Chief of Staff',                           dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'3', name:'Nick Carey',               title:'Lead Product Marketing Manager',           dept:'Product Marketing', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'5', name:'Brianne Edwards',          title:'Executive Business Partner',               dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'7', name:'Anastasia Parsons',        title:'Executive Coordinator',                    dept:'Management',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'8', name:'Maggie McCarthy',          title:'Global Partner Marketing Program Manager', dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'9', name:'Brendan Lee',              title:'Contract',                                 dept:'Unassigned',        seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'10',name:'Bryan Gilligan',           title:'Visual Designer',                          dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'12',name:'Lauren Harrington',        title:'Senior Product Manager',                   dept:'Product',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'13',name:'Carlene Reyes',            title:'Senior Customer Marketing Manager',        dept:'Product Marketing', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'16',name:'Cade McNelly',             title:'Digital Content Producer',                 dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'23',name:'Matthew Watson',           title:'Strategic Pricing Manager',                dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'OOO May 1-29', status:'OOO'},
+  {seat:'24',name:'Jeff Piaquadio',           title:'Director FP&A',                            dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'30',name:'Alissa Swartz',            title:'Corporate Account Executive',              dept:'Account Executives',seatNeeded:'3/2/26',  endDate:'',        notes:'WFH??', status:'WFH'},
+  {seat:'31',name:'Stephen Wong',             title:'Website Developer, Associate',             dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'32',name:'Deepanshu Sandhuria',      title:'Engineering Manager',                      dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'OOO Mar 23-30', status:'OOO'},
+  {seat:'33',name:'Prathamesh Chitodkar',     title:'Engineering Manager',                      dept:'Security',          seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'34',name:'Claire Wang',              title:'Senior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'35',name:'Robert Casto',             title:'IT Operations Manager',                    dept:'Core Tech IT',      seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'36',name:'Ravi Ghanta',              title:'Director of Internal Productivity & IT',   dept:'Core Tech IT',      seatNeeded:'3/2/26',  endDate:'',        notes:'WFH?', status:'WFH'},
+  {seat:'37',name:'Harsh Bajaj',              title:'Senior Software Engineer, Integrations',   dept:'Engineering',       seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'38',name:'Nagendra Gupta',           title:'Data Engineering Manager',                 dept:'Data',              seatNeeded:'3/2/26',  endDate:'',        notes:'WFH', status:'WFH'},
+  {seat:'40',name:'Jazmine McGinnis',         title:'Staff CE',                                 dept:'Onboarding',        seatNeeded:'3/2/26',  endDate:'4/10/26', notes:'OOO April 13-20', status:'OOO'},
+  {seat:'41',name:'Ashley Hwang',             title:'Interim',                                  dept:'Unassigned',        seatNeeded:'3/2/26',  endDate:'',        notes:'Remove seat - find out plans', status:''},
+  {seat:'44',name:'Marine Viet',              title:'Intern, Marketing Programs',               dept:'Demand Generation', seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'WFH',name:'Cassy Searles',           title:'Senior Legal Counsel',                     dept:'Legal',             seatNeeded:'3/2/26',  endDate:'',        notes:'WFH check with Cassy/Alain', status:'WFH'},
+  {seat:'—', name:'Richelle Margaux Yunker',  title:'Account Receivable & Cash Collections',   dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'—', name:'Subhleen Marok',           title:'Senior Account Receivable',               dept:'Finance',           seatNeeded:'3/2/26',  endDate:'',        notes:'', status:''},
+  {seat:'6', name:'Jean Soong',               title:'Executive Business Partner',               dept:'Management',        seatNeeded:'3/9/26',  endDate:'',        notes:'WFH??', status:'WFH'},
+  {seat:'39',name:'Christopher Bukavich',     title:'Senior Security Engineer',                 dept:'Security',          seatNeeded:'3/9/26',  endDate:'4/10/26', notes:'', status:''},
+  {seat:'43',name:'Cate Elliott',             title:'HR Operations Specialist',                 dept:'HR Ops',            seatNeeded:'3/9/26',  endDate:'4/10/26', notes:'OOO April 13-24', status:'OOO'},
+  {seat:'19',name:'Taran Bains',              title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/16/26', endDate:'',        notes:'', status:''},
+  {seat:'21',name:'Debayan Datta',            title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'3/16/26', endDate:'',        notes:'', status:''},
+  {seat:'27',name:'Mike Winkler',             title:'Account Manager',                          dept:'Success',           seatNeeded:'3/23/26', endDate:'',        notes:'', status:''},
+  {seat:'29',name:'Ariel Dompier',            title:'Account Manager',                          dept:'Success',           seatNeeded:'3/23/26', endDate:'',        notes:'', status:''},
+  {seat:'4', name:'Greg Banks',               title:'Talent Acquisition Specialist',            dept:'Talent Acquisition',seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'Gauge WFH preference', status:''},
+  {seat:'11',name:'KJ Singh',                 title:'Director of Product, App Ecosystem',       dept:'Product',           seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'', status:''},
+  {seat:'20',name:'Sai Arun Reddy Katipally', title:'Junior Software Engineer',                 dept:'Engineering',       seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
+  {seat:'25',name:'Buay Ruot',                title:'Account Manager - Seattle',                dept:'Account Executives',seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
+  {seat:'26',name:'Natalie Desjardins',       title:'Senior Account Manager - Seattle',         dept:'Account Executives',seatNeeded:'4/6/26',  endDate:'',        notes:'', status:''},
+  {seat:'28',name:'Tom Forter',               title:'Visiting Sales Manager',                   dept:'Success',           seatNeeded:'4/6/26',  endDate:'4/10/26', notes:"Sitting in Maggie's desk", status:'VISITOR'},
+  {seat:'Office',name:'Helen-Alice Miranda',  title:"HA (Alex Yang's seat)",                    dept:'Management',        seatNeeded:'4/6/26',  endDate:'4/10/26', notes:'', status:''},
+  {seat:'14',name:'Trenton Erker',            title:'SEO & AI Search Strategy Lead',            dept:'Demand Generation', seatNeeded:'4/13/26', endDate:'',        notes:'OOO April 6-10', status:'OOO'},
+  {seat:'15',name:'Madelyn DePrey',           title:'Visiting Sales Manager',                   dept:'Sales Overhead',    seatNeeded:'4/13/26', endDate:'4/16/26', notes:'', status:'VISITOR'},
+  {seat:'28',name:'Brady Thomas',             title:'Account Manager - Seattle',                dept:'Success',           seatNeeded:'4/13/26', endDate:'',        notes:'', status:''},
+  {seat:'42',name:'Alex Yang',                title:'Software Engineer',                        dept:'Engineering',       seatNeeded:'4/13/26', endDate:'',        notes:'OOO April 1-10, Thursdays only', status:'OOO'},
+  {seat:'Conf',name:'Michele Trevisiol',      title:'Visitor',                                  dept:'Unassigned',        seatNeeded:'4/13/26', endDate:'4/16/26', notes:'Thursdays only', status:'VISITOR'},
+  {seat:'15',name:'Trent Morris',             title:'Growth Marketing Manager',                 dept:'Demand Generation', seatNeeded:'4/20/26', endDate:'',        notes:'OOO April 2-20', status:'OOO'},
+  {seat:'17',name:'Ravi Kiran Kethamakka',    title:'Backend/AI Engineering',                   dept:'Engineering',       seatNeeded:'4/20/26', endDate:'',        notes:"Place in Chris's desk", status:''},
+  {seat:'38',name:'Sujeeth Namburi',          title:'Security Engineer',                        dept:'Security',          seatNeeded:'4/20/26', endDate:'',        notes:"Tentative. Can sit in Nagendra's seat", status:''},
+  {seat:'—', name:'Shujie Li',               title:'Senior Data Scientist',                    dept:'Data',              seatNeeded:'4/27/26', endDate:'',        notes:'Out until end of April', status:'OOO'},
+  {seat:'—', name:'Christopher Howard',       title:'Director of Procurement',                  dept:'Finance',           seatNeeded:'4/27/26', endDate:'',        notes:'', status:''},
+  {seat:'—', name:'Sean Davis',               title:'Senior Accountant A/P',                    dept:'Finance',           seatNeeded:'5/4/26',  endDate:'',        notes:'WFH April 6-EOM', status:'WFH'},
+  {seat:'—', name:'Umesh Waghmode',           title:'Senior Salesforce Engineer',               dept:'Engineering',       seatNeeded:'5/20/26', endDate:'',        notes:'', status:''},
+  {seat:'Office',name:'Lauren Newman',        title:'Chief Finance Officer',                    dept:'Finance',           seatNeeded:'Office',  endDate:'',        notes:'No desk needed — office assigned', status:''},
+  {seat:'Office',name:'Scott Chancellor',     title:'CEO',                                      dept:'Management',        seatNeeded:'Office',  endDate:'',        notes:'No desk needed — office assigned', status:''},
+  {seat:'Conf', name:'Fred Viet',             title:'Visiting Executive',                       dept:'Unassigned',        seatNeeded:'—',       endDate:'',        notes:'Booking conf room for full visit', status:'VISITOR'},
+];
+
+function loadHC(){
+  try{const s=localStorage.getItem('aircall-sea-hc');if(s)return JSON.parse(s);}catch(e){}
+  return HEADCOUNT_DEFAULT.map(r=>({...r}));
+}
+function saveHC(){localStorage.setItem('aircall-sea-hc',JSON.stringify(HC));}
+let HC=loadHC();
+Object.defineProperty(window,'HEADCOUNT',{get:()=>HC});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DEFAULT LAYOUT WITH NEW PROPERTIES
+// ══════════════════════════════════════════════════════════════════════════════
+
+function defaultLayout(){
+  return {
+    roomPoints:[
+      [10,  13],   [310, 13],   [310, 40],   [344, 8],    [388, 8],
+      [388, 40],   [450, 40],   [450, 300],  [10, 300],
+    ],
+    confRooms:[
+      {name:'Conference A', cx:110, cy:75, r:18},
+      {name:'Conference B', cx:170, cy:75, r:18},
+      {name:'Kitchen',      cx:330, cy:26, r:12},
+    ],
+    desks:[
+      {id:1, x:80, y:120, w:24, h:16},
+      {id:2, x:120, y:120, w:24, h:16},
+      {id:3, x:160, y:120, w:24, h:16},
+      {id:4, x:200, y:120, w:24, h:16},
+      {id:5, x:240, y:120, w:24, h:16},
+      {id:6, x:280, y:120, w:24, h:16},
+      {id:7, x:320, y:120, w:24, h:16},
+      {id:8, x:360, y:120, w:24, h:16},
+      {id:9, x:80, y:160, w:24, h:16},
+      {id:10, x:120, y:160, w:24, h:16},
+      {id:11, x:160, y:160, w:24, h:16},
+      {id:12, x:200, y:160, w:24, h:16},
+      {id:13, x:240, y:160, w:24, h:16},
+      {id:14, x:280, y:160, w:24, h:16},
+      {id:15, x:320, y:160, w:24, h:16},
+      {id:16, x:360, y:160, w:24, h:16},
+      {id:17, x:80, y:200, w:24, h:16},
+      {id:18, x:120, y:200, w:24, h:16},
+      {id:19, x:160, y:200, w:24, h:16},
+      {id:20, x:200, y:200, w:24, h:16},
+      {id:21, x:240, y:200, w:24, h:16},
+      {id:22, x:280, y:200, w:24, h:16},
+      {id:23, x:320, y:200, w:24, h:16},
+      {id:24, x:360, y:200, w:24, h:16},
+      {id:25, x:80, y:240, w:24, h:16},
+      {id:26, x:120, y:240, w:24, h:16},
+      {id:27, x:160, y:240, w:24, h:16},
+      {id:28, x:200, y:240, w:24, h:16},
+      {id:29, x:240, y:240, w:24, h:16},
+      {id:30, x:280, y:240, w:24, h:16},
+      {id:31, x:320, y:240, w:24, h:16},
+      {id:32, x:360, y:240, w:24, h:16},
+      {id:33, x:80, y:280, w:24, h:16},
+      {id:34, x:120, y:280, w:24, h:16},
+      {id:35, x:160, y:280, w:24, h:16},
+      {id:36, x:200, y:280, w:24, h:16},
+      {id:37, x:240, y:280, w:24, h:16},
+      {id:38, x:280, y:280, w:24, h:16},
+      {id:39, x:320, y:280, w:24, h:16},
+      {id:40, x:360, y:280, w:24, h:16},
+      {id:41, x:400, y:200, w:24, h:16},
+      {id:42, x:400, y:240, w:24, h:16},
+      {id:43, x:400, y:280, w:24, h:16},
+      {id:44, x:420, y:160, w:24, h:16},
+    ],
+    collabTables:[
+      {name:'Table A', cx:80, cy:100, r:12},
+      {name:'Table B', cx:200, cy:100, r:12},
+      {name:'Table C', cx:320, cy:100, r:12},
+    ],
+    corridorWalls:[],
+    symbols:[],
+    annotations:[],
+  };
+}
+
+let LAYOUT=loadLayoutFromStorage();
+function loadLayoutFromStorage(){
+  try{
+    let stored=localStorage.getItem('aircall-sea-layout-v7');
+    if(stored){
+      let data=JSON.parse(stored);
+      if(!data.symbols) data.symbols=[];
+      if(!data.annotations) data.annotations=[];
+      return data;
+    }
+  }catch(e){}
+  return defaultLayout();
+}
+
+function saveLayout(){
+  localStorage.setItem('aircall-sea-layout-v7', JSON.stringify(LAYOUT));
+}
+
+function resetLayout(){
+  if(confirm('Reset to defaults?')){
+    LAYOUT=defaultLayout();
+    clearSelection();
+    showEditPanel(null);
+    history_stack=[];
+    historyIdx=-1;
+    renderAll();
+    saveLayout();
+  }
+}
+
+function deepClone(o){return JSON.parse(JSON.stringify(o));}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HISTORY & UNDO/REDO
+// ══════════════════════════════════════════════════════════════════════════════
+
+let history_stack=[];
+let historyIdx=-1;
+
+function pushHistory(){
+  history_stack=history_stack.slice(0, historyIdx+1);
+  history_stack.push(deepClone(LAYOUT));
+  historyIdx=history_stack.length-1;
+  updateUndoRedoBtns();
+}
+
+function undo(){
+  if(historyIdx>0){
+    historyIdx--;
+    LAYOUT=deepClone(history_stack[historyIdx]);
+    clearSelection();
+    showEditPanel(null);
+    renderAll();
+    saveLayout();
+    updateUndoRedoBtns();
+  }
+}
+
+function redo(){
+  if(historyIdx<history_stack.length-1){
+    historyIdx++;
+    LAYOUT=deepClone(history_stack[historyIdx]);
+    clearSelection();
+    showEditPanel(null);
+    renderAll();
+    saveLayout();
+    updateUndoRedoBtns();
+  }
+}
+
+function updateUndoRedoBtns(){
+  document.getElementById('btnUndo').disabled=historyIdx<=0;
+  document.getElementById('btnRedo').disabled=historyIdx>=history_stack.length-1;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VIEWPORT & ZOOM
+// ══════════════════════════════════════════════════════════════════════════════
+
+let vp={x:0, y:0, scale:1};
+
+function applyVP(){
+  const svg=document.getElementById('floor-svg');
+  svg.setAttribute('viewBox', `${vp.x} ${vp.y} ${500/vp.scale} ${300/vp.scale}`);
+  document.getElementById('zoomPct').textContent=Math.round(vp.scale*100)+'%';
+}
+
+function svgPt(e){
+  const svg=document.getElementById('floor-svg');
+  const rect=svg.getBoundingClientRect();
+  const x=(e.clientX-rect.left)/rect.width * (500/vp.scale) + vp.x;
+  const y=(e.clientY-rect.top)/rect.height * (300/vp.scale) + vp.y;
+  return [x, y];
+}
+
+function vmPt(e){
+  const svg=document.getElementById('floor-svg');
+  const rect=svg.getBoundingClientRect();
+  return [(e.clientX-rect.left), (e.clientY-rect.top)];
+}
+
+function zoomAt(cx, cy, factor){
+  vp.scale*=factor;
+  vp.scale=Math.max(0.1, Math.min(3, vp.scale));
+  vp.x+=cx*(1-1/factor)/vp.scale;
+  vp.y+=cy*(1-1/factor)/vp.scale;
+  applyVP();
+}
+
+function zoomStep(dir){
+  const center=[250/vp.scale+vp.x, 150/vp.scale+vp.y];
+  zoomAt(center[0], center[1], dir>0?1.2:1/1.2);
+}
+
+function resetViewport(){
+  vp={x:0, y:0, scale:1};
+  applyVP();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function el(tag, attrs, parent){
+  const e=document.createElement(tag);
+  if(attrs)Object.assign(e,attrs);
+  if(parent)parent.appendChild(e);
+  return e;
+}
+
+function txt(content, attrs, parent){
+  const e=document.createTextNode(content);
+  const span=document.createElement('span');
+  if(attrs)Object.assign(span,attrs);
+  span.appendChild(e);
+  if(parent)parent.appendChild(span);
+  return span;
+}
+
+function shortName(n){
+  if(!n||n.length<1)return'?';
+  const parts=n.split(' ');
+  if(parts.length===1)return n.substring(0,2).toUpperCase();
+  return(parts[0][0]+parts[parts.length-1][0]).toUpperCase();
+}
+
+function snapToGrid(v){
+  return Math.round(v/8)*8;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// THEME TOGGLE
+// ══════════════════════════════════════════════════════════════════════════════
+
+function initTheme(){
+  const stored=localStorage.getItem('aircall-theme');
+  const isDark=stored==='dark'||(!stored);
+  if(!isDark){
+    document.documentElement.classList.add('light-mode');
+  }
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+}
+
+function toggleTheme(){
+  const isDark=document.documentElement.classList.contains('light-mode');
+  if(isDark){
+    document.documentElement.classList.remove('light-mode');
+    localStorage.setItem('aircall-theme', 'dark');
+  }else{
+    document.documentElement.classList.add('light-mode');
+    localStorage.setItem('aircall-theme', 'light');
+  }
+}
+
+// Continue in next part...
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SELECTION & INTERACTION STATE
+// ══════════════════════════════════════════════════════════════════════════════
+
+let editMode=false, gridSnap=false;
+let drawingWall=false, wallStart=null;
+let drawingText=false, textPlacementMode=false;
+let selection=[];
+let dragState=null;
+let spaceDown=false;
+
+let activeDept='ALL', searchTerm='', currentView='map';
+let rosterSort={col:'seat',dir:'asc'};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SYMBOL LIBRARY
+// ══════════════════════════════════════════════════════════════════════════════
+
+const SYMBOL_CATEGORIES={
+  Desks:[
+    {name:'Single Desk', svg:'<rect x="0" y="0" width="20" height="14" fill="#999" rx="2"/>'},
+    {name:'Double Desk', svg:'<rect x="0" y="0" width="28" height="16" fill="#999" rx="2"/>'},
+    {name:'Standing Desk', svg:'<rect x="0" y="0" width="18" height="12" fill="#AAA" rx="2"/><line x1="4" y1="0" x2="4" y2="12" stroke="#666" stroke-width="1"/>'},
+    {name:'L-Desk', svg:'<path d="M0,0 L18,0 L18,10 L10,10 L10,16 L0,16 Z" fill="#999" stroke="#666" stroke-width="0.5"/>'},
+    {name:'Workstation', svg:'<g><rect x="0" y="0" width="24" height="18" fill="#888" rx="2" opacity="0.6"/><circle cx="12" cy="9" r="4" fill="#AAA"/></g>'},
+    {name:'Monitor', svg:'<rect x="2" y="1" width="16" height="10" fill="none" stroke="#999" stroke-width="1"/><rect x="6" y="11" width="8" height="1" fill="#999"/>'},
+  ],
+  Seating:[
+    {name:'Office Chair', svg:'<circle cx="8" cy="6" r="5" fill="#888"/><rect x="5" y="10" width="6" height="2" fill="#666"/>'},
+    {name:'Conference Chair', svg:'<ellipse cx="8" cy="5" rx="4" ry="6" fill="#777"/><rect x="5" y="11" width="6" height="1" fill="#555"/>'},
+    {name:'Visitor Chair', svg:'<rect x="2" y="2" width="12" height="10" fill="#AAA" rx="1"/>'},
+  ],
+  Tables:[
+    {name:'Round Table', svg:'<circle cx="12" cy="12" r="10" fill="none" stroke="#888" stroke-width="1"/>'},
+    {name:'Rectangle Table', svg:'<rect x="4" y="6" width="16" height="12" fill="none" stroke="#888" stroke-width="1" rx="1"/>'},
+    {name:'Square Table', svg:'<rect x="4" y="4" width="16" height="16" fill="none" stroke="#888" stroke-width="1"/>'},
+    {name:'High Table', svg:'<rect x="6" y="2" width="12" height="14" fill="none" stroke="#999" stroke-width="1.5"/>'},
+  ],
+  Conference:[
+    {name:'Video Unit', svg:'<rect x="2" y="4" width="20" height="12" fill="#666" rx="1"/><circle cx="12" cy="10" r="3" fill="#999"/>'},
+    {name:'Whiteboard', svg:'<rect x="1" y="2" width="22" height="16" fill="#F0F0F0" stroke="#666" stroke-width="1"/>'},
+    {name:'Projector', svg:'<circle cx="12" cy="8" r="4" fill="#555"/><rect x="10" y="12" width="4" height="2" fill="#333"/>'},
+  ],
+  Kitchen:[
+    {name:'Fridge', svg:'<rect x="2" y="1" width="20" height="22" fill="#CCC" stroke="#999" stroke-width="1"/><rect x="4" y="3" width="16" height="18" fill="#DDD" stroke="#AAA" stroke-width="0.5"/>'},
+    {name:'Sink', svg:'<rect x="4" y="4" width="16" height="10" fill="none" stroke="#888" stroke-width="1.5" rx="1"/>'},
+    {name:'Microwave', svg:'<rect x="3" y="3" width="18" height="12" fill="#BBB" stroke="#666" stroke-width="1" rx="1"/>'},
+    {name:'Counter', svg:'<rect x="1" y="2" width="22" height="8" fill="#D4A574" stroke="#8B6914" stroke-width="1"/>'},
+  ],
+  Bathroom:[
+    {name:'Toilet', svg:'<ellipse cx="12" cy="8" rx="6" ry="8" fill="none" stroke="#888" stroke-width="1"/><rect x="9" y="14" width="6" height="4" fill="none" stroke="#888" stroke-width="1"/>'},
+    {name:'Sink', svg:'<circle cx="12" cy="10" r="7" fill="none" stroke="#888" stroke-width="1"/><rect x="10" y="16" width="4" height="2" fill="#888"/>'},
+    {name:'Stall', svg:'<rect x="3" y="2" width="18" height="20" fill="none" stroke="#888" stroke-width="1.5"/><line x1="12" y1="2" x2="12" y2="22" stroke="#888" stroke-width="1"/>'},
+  ],
+};
+
+function initSymbolPanel(){
+  const list=document.getElementById('symbolList');
+  for(const [cat, items] of Object.entries(SYMBOL_CATEGORIES)){
+    const catDiv=el('div', {className:'symbol-category'}, list);
+    txt(cat, {className:'symbol-cat-title'}, catDiv);
+    for(const item of items){
+      const itemDiv=el('div', {className:'symbol-item'}, catDiv);
+      itemDiv.textContent=item.name;
+      itemDiv.draggable=true;
+      itemDiv.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.effectAllowed='copy';
+        e.dataTransfer.setData('text/json', JSON.stringify({type:'symbol', svg:item.svg, name:item.name}));
+      });
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDERING
+// ══════════════════════════════════════════════════════════════════════════════
+
+function clearSelection(){selection=[];}
+
+function isSelected(type,idx){
+  return selection.some(s=>s.type===type&&s.idx===idx);
+}
+
+function setSelection(item){
+  selection=[item];
+  afterSelectionChange();
+}
+
+function addToSelection(item){
+  if(!isSelected(item.type, item.idx)){
+    selection.push(item);
+  }
+  afterSelectionChange();
+}
+
+function toggleSelection(item){
+  if(isSelected(item.type, item.idx)){
+    selection=selection.filter(s=>!(s.type===item.type&&s.idx===item.idx));
+  }else{
+    selection.push(item);
+  }
+  afterSelectionChange();
+}
+
+function afterSelectionChange(){
+  const hasAlignables=selection.length>1&&selection.every(s=>['desk','tableCircle'].includes(s.type));
+  document.getElementById('alignRow').classList.toggle('visible', hasAlignables);
+  const hasDelete=selection.length>0;
+  document.getElementById('btnDelete').disabled=!hasDelete;
+  renderDesks();
+  renderTables();
+  updateEditPanel();
+}
+
+function updateEditPanel(){
+  if(selection.length===0){
+    showEditPanel(null);
+  }else{
+    showEditPanel(selection[0]);
+  }
+}
+
+function renderAll(){
+  const svg=document.getElementById('floor-svg');
+  svg.innerHTML='';
+  renderRoom();
+  renderConfRooms();
+  renderTables();
+  renderDesks();
+  renderAnnotations();
+  renderCorridorWalls();
+  renderLabels();
+  if(editMode) renderHandles();
+  updateCount();
+}
+
+function renderRoom(){
+  const svg=document.getElementById('floor-svg');
+  if(LAYOUT.roomPoints.length<3) return;
+  const pts=LAYOUT.roomPoints.map(p=>`${p[0]},${p[1]}`).join(' ');
+  const poly=el('polygon', {points:pts, fill:'rgba(200,220,220,0.05)', stroke:'#666', 'stroke-width':'1.5'}, svg);
+}
+
+function renderConfRooms(){
+  const svg=document.getElementById('floor-svg');
+  LAYOUT.confRooms.forEach((room,idx)=>{
+    const g=el('g', {}, svg);
+    const circ=el('circle', {cx:room.cx, cy:room.cy, r:room.r, fill:'#E8D4F8', stroke:'#999', 'stroke-width':'1'}, g);
+    const lbl=el('text', {x:room.cx, y:room.cy, class:'room-lbl', textContent:room.name}, g);
+  });
+}
+
+function renderTables(){
+  const svg=document.getElementById('floor-svg');
+  LAYOUT.collabTables.forEach((table,idx)=>{
+    const g=el('g', {class:'table-g', 'data-idx':idx}, svg);
+    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'tableCircle',idx});});
+    const circ=el('circle', {cx:table.cx, cy:table.cy, r:table.r, fill:'#C4E5C1', stroke:isSelected('tableCircle',idx)?'var(--accent)':'#666', 'stroke-width':isSelected('tableCircle',idx)?'2':'1'}, g);
+    const lbl=el('text', {x:table.cx, y:table.cy+2, class:'room-lbl', textContent:table.name}, g);
+  });
+}
+
+function renderDesks(){
+  const svg=document.getElementById('floor-svg');
+  LAYOUT.desks.forEach((d,idx)=>{
+    const dg=el('g', {class:'desk-g'+(isDeskDimmed(d.id)?' dimmed':'')+(isSelected('desk',idx)?' selected':''), 'data-idx':idx}, svg);
+    dg.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'desk',idx});});
+    dg.addEventListener('contextmenu', (e)=>{e.preventDefault(); toggleSelection({type:'desk',idx});});
+    const body=el('rect', {x:d.x, y:d.y, width:d.w, height:d.h, class:'desk-body', fill:SEATS[d.id]?DEPTS[SEATS[d.id].dept].color:'#888', rx:2}, dg);
+    if(HC.find(hc=>hc.seat==d.id)){
+      const name=SEATS[d.id]?SEATS[d.id].name:'';
+      txt(shortName(name), {class:'desk-lbl'}, el('text', {x:d.x+d.w/2, y:d.y+d.h/2}, dg));
+    }
+    txt(d.id.toString(), {class:'desk-num'}, el('text', {x:d.x+d.w/2, y:d.y+d.h/2+4}, dg));
+  });
+}
+
+function renderAnnotations(){
+  const svg=document.getElementById('floor-svg');
+  LAYOUT.annotations.forEach((ann,idx)=>{
+    const g=el('g', {class:'text-annotation-g'+(isSelected('annotation',idx)?' selected':''), 'data-idx':idx}, svg);
+    const bg=el('rect', {x:ann.x-2, y:ann.y-ann.fontSize/2-2, width:ann.text.length*ann.fontSize*0.5+4, height:ann.fontSize+4, fill:'rgba(255,255,200,0.8)', stroke:isSelected('annotation',idx)?'var(--accent)':'#999', 'stroke-width':'1', rx:2}, g);
+    const t=el('text', {x:ann.x, y:ann.y, 'font-size':ann.fontSize, fill:'#000', 'text-anchor':'middle'}, g);
+    t.textContent=ann.text;
+    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'annotation',idx});});
+    g.style.cursor='pointer';
+  });
+}
+
+function renderCorridorWalls(){
+  const svg=document.getElementById('floor-svg');
+  if(!LAYOUT.corridorWalls) return;
+  LAYOUT.corridorWalls.forEach((w,idx)=>{
+    const g=el('g', {class:'wall'+(isSelected('wall',idx)?' selected':''), 'data-idx':idx}, svg);
+    const line=el('line', {x1:w.x1, y1:w.y1, x2:w.x2, y2:w.y2, class:'wall'+(isSelected('wall',idx)?' selected':''), 'stroke-width':isSelected('wall',idx)?3:2}, g);
+    if(editMode){
+      const cx=(w.x1+w.x2)/2, cy=(w.y1+w.y2)/2;
+      const len=Math.sqrt(Math.pow(w.x2-w.x1,2)+Math.pow(w.y2-w.y1,2));
+      const meters=(len*0.01).toFixed(2);
+      const lbl=el('text', {x:cx, y:cy-4, class:'wall-label', textContent:meters+'m'}, g);
+    }
+    g.addEventListener('click', (e)=>{e.stopPropagation(); setSelection({type:'wall',idx});});
+  });
+}
+
+function renderLabels(){
+  const svg=document.getElementById('floor-svg');
+}
+
+function renderHandles(){
+  const svg=document.getElementById('floor-svg');
+  if(!editMode) return;
+  
+  LAYOUT.roomPoints.forEach((pt,idx)=>{
+    const circle=el('circle', {cx:pt[0], cy:pt[1], r:4, class:'v-handle'}, svg);
+    circle.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragVertex(e,idx);});
+  });
+
+  LAYOUT.desks.forEach((d,idx)=>{
+    const rh=el('circle', {cx:d.x+d.w, cy:d.y+d.h, r:3, class:'resize-handle'}, svg);
+    rh.addEventListener('mousedown', (e)=>{e.stopPropagation(); startResizeDesk(e,idx);});
+  });
+
+  if(LAYOUT.corridorWalls){
+    LAYOUT.corridorWalls.forEach((w,idx)=>{
+      const h1=el('circle', {cx:w.x1, cy:w.y1, r:3, class:'v-handle'}, svg);
+      h1.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragWallEnd(e,idx,0);});
+      const h2=el('circle', {cx:w.x2, cy:w.y2, r:3, class:'v-handle'}, svg);
+      h2.addEventListener('mousedown', (e)=>{e.stopPropagation(); startDragWallEnd(e,idx,1);});
+    });
+  }
+}
+
+function updateCount(){
+  const desks=LAYOUT.desks.length;
+  const people=HC.length;
+  document.getElementById('deskCount').textContent=desks;
+  document.getElementById('peopleCount').textContent=people;
+  document.getElementById('itemCount').textContent=LAYOUT.desks.length+' desks, '+LAYOUT.collabTables.length+' tables';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DRAG & DROP
+// ══════════════════════════════════════════════════════════════════════════════
+
+function startDragVertex(e, idx){
+  dragState={type:'vertex', idx, origX:LAYOUT.roomPoints[idx][0], origY:LAYOUT.roomPoints[idx][1]};
+  document.addEventListener('mousemove', handleDragVertex);
+  document.addEventListener('mouseup', endDrag);
+}
+
+function handleDragVertex(e){
+  if(!dragState||dragState.type!=='vertex') return;
+  const [sx,sy]=svgPt(e);
+  LAYOUT.roomPoints[dragState.idx][0]=gridSnap?snapToGrid(sx):sx;
+  LAYOUT.roomPoints[dragState.idx][1]=gridSnap?snapToGrid(sy):sy;
+  renderRoom();
+  renderHandles();
+}
+
+function startResizeDesk(e, idx){
+  dragState={type:'resizeDesk', idx, origW:LAYOUT.desks[idx].w, origH:LAYOUT.desks[idx].h};
+  document.addEventListener('mousemove', handleResizeDesk);
+  document.addEventListener('mouseup', endDrag);
+}
+
+function handleResizeDesk(e){
+  if(!dragState||dragState.type!=='resizeDesk') return;
+  const [sx,sy]=svgPt(e);
+  const d=LAYOUT.desks[dragState.idx];
+  d.w=Math.max(8, gridSnap?snapToGrid(sx-d.x):sx-d.x);
+  d.h=Math.max(8, gridSnap?snapToGrid(sy-d.y):sy-d.y);
+  renderDesks();
+  renderHandles();
+}
+
+function startDragWallEnd(e, idx, end){
+  dragState={type:'dragWallEnd', wallIdx:idx, end, origX1:LAYOUT.corridorWalls[idx].x1, origY1:LAYOUT.corridorWalls[idx].y1, origX2:LAYOUT.corridorWalls[idx].x2, origY2:LAYOUT.corridorWalls[idx].y2};
+  document.addEventListener('mousemove', handleDragWallEnd);
+  document.addEventListener('mouseup', endDrag);
+}
+
+function handleDragWallEnd(e){
+  if(!dragState||dragState.type!=='dragWallEnd') return;
+  const [sx,sy]=svgPt(e);
+  const w=LAYOUT.corridorWalls[dragState.wallIdx];
+  if(dragState.end===0){
+    w.x1=gridSnap?snapToGrid(sx):sx;
+    w.y1=gridSnap?snapToGrid(sy):sy;
+  }else{
+    w.x2=gridSnap?snapToGrid(sx):sx;
+    w.y2=gridSnap?snapToGrid(sy):sy;
+  }
+  renderCorridorWalls();
+  renderHandles();
+}
+
+function endDrag(){
+  document.removeEventListener('mousemove', handleDragVertex);
+  document.removeEventListener('mousemove', handleResizeDesk);
+  document.removeEventListener('mousemove', handleDragWallEnd);
+  document.removeEventListener('mouseup', endDrag);
+  if(dragState){
+    saveLayout();
+  }
+  dragState=null;
+}
+
+// Continue in next part...
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EDIT TOOLS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function toggleEditMode(){
+  editMode=!editMode;
+  document.getElementById('btnEdit').classList.toggle('on', editMode);
+  document.getElementById('editBadge').classList.toggle('on', editMode);
+  document.getElementById('editToolbar').classList.toggle('on', editMode);
+  clearSelection();
+  showEditPanel(null);
+  renderAll();
+}
+
+function toggleGrid(){
+  gridSnap=!gridSnap;
+  document.getElementById('btnGrid').classList.toggle('on', gridSnap);
+}
+
+function addNewDesk(){
+  pushHistory();
+  const maxId=Math.max(...LAYOUT.desks.map(d=>d.id), 0);
+  LAYOUT.desks.push({id:maxId+1, x:100, y:100, w:24, h:16});
+  renderDesks();
+  saveLayout();
+}
+
+function addNewTable(){
+  pushHistory();
+  const maxIdx=LAYOUT.collabTables.length;
+  LAYOUT.collabTables.push({name:'Table '+(maxIdx+1), cx:100, cy:100, r:12});
+  renderTables();
+  saveLayout();
+}
+
+function startWallDrawing(){
+  drawingWall=!drawingWall;
+  wallStart=null;
+  document.getElementById('btnDrawWall').classList.toggle('on', drawingWall);
+  if(!drawingWall) wallStart=null;
+}
+
+function startTextMode(){
+  drawingText=!drawingText;
+  document.getElementById('btnAddText').classList.toggle('on', drawingText);
+}
+
+function deleteSelected(){
+  if(selection.length===0) return;
+  if(!confirm('Delete selected items?')) return;
+  pushHistory();
+  
+  selection.forEach(sel=>{
+    if(sel.type==='desk'){
+      LAYOUT.desks.splice(sel.idx, 1);
+    }else if(sel.type==='tableCircle'){
+      LAYOUT.collabTables.splice(sel.idx, 1);
+    }else if(sel.type==='vertex'){
+      if(LAYOUT.roomPoints.length>3){
+        LAYOUT.roomPoints.splice(sel.idx, 1);
+      }
+    }else if(sel.type==='wall'){
+      LAYOUT.corridorWalls.splice(sel.idx, 1);
+    }else if(sel.type==='annotation'){
+      LAYOUT.annotations.splice(sel.idx, 1);
+    }
+  });
+  
+  clearSelection();
+  showEditPanel(null);
+  renderAll();
+  saveLayout();
+}
+
+function alignSelected(mode){
+  if(selection.length<2) return;
+  const items=selection.filter(s=>['desk','tableCircle'].includes(s.type)).map(s=>{
+    if(s.type==='desk'){
+      return {type:'desk', idx:s.idx, obj:LAYOUT.desks[s.idx]};
+    }else{
+      return {type:'tableCircle', idx:s.idx, obj:LAYOUT.collabTables[s.idx]};
+    }
+  });
+  if(items.length<2) return;
+  
+  pushHistory();
+  const minX=Math.min(...items.map(i=>i.obj.x||i.obj.cx-i.obj.r));
+  const maxX=Math.max(...items.map(i=>(i.obj.x||i.obj.cx)+((i.obj.w||i.obj.r*2))));
+  const minY=Math.min(...items.map(i=>i.obj.y||i.obj.cy-i.obj.r));
+  const maxY=Math.max(...items.map(i=>(i.obj.y||i.obj.cy)+((i.obj.h||i.obj.r*2))));
+  const cenX=(minX+maxX)/2;
+  const cenY=(minY+maxY)/2;
+  
+  items.forEach(i=>{
+    if(mode==='L') i.obj.x=minX;
+    if(mode==='R') i.obj.x=maxX-(i.obj.w||i.obj.r*2);
+    if(mode==='CX') i.obj.x=cenX-(i.obj.w||i.obj.r*2)/2;
+    if(mode==='T') i.obj.y=minY;
+    if(mode==='B') i.obj.y=maxY-(i.obj.h||i.obj.r*2);
+    if(mode==='CY') i.obj.y=cenY-(i.obj.h||i.obj.r*2)/2;
+  });
+  
+  renderDesks();
+  renderTables();
+  renderHandles();
+  saveLayout();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EDIT PANEL DISPLAY
+// ══════════════════════════════════════════════════════════════════════════════
+
+function showEditPanel(item){
+  const panel=document.getElementById('sidePanel');
+  const title=document.getElementById('panelTitle');
+  const content=document.getElementById('panelContent');
+  
+  if(!item){
+    panel.classList.remove('open');
+    return;
+  }
+  
+  panel.classList.add('open');
+  content.innerHTML='';
+  
+  if(item.type==='desk'){
+    const d=LAYOUT.desks[item.idx];
+    title.textContent='Desk '+d.id;
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">ID:</span>
+        <input class="panel-input" value="${d.id}" onchange="LAYOUT.desks[${item.idx}].id=parseInt(this.value);renderDesks();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">X:</span>
+        <input class="panel-input" value="${d.x}" onchange="LAYOUT.desks[${item.idx}].x=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y:</span>
+        <input class="panel-input" value="${d.y}" onchange="LAYOUT.desks[${item.idx}].y=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Width:</span>
+        <input class="panel-input" value="${d.w}" onchange="LAYOUT.desks[${item.idx}].w=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Height:</span>
+        <input class="panel-input" value="${d.h}" onchange="LAYOUT.desks[${item.idx}].h=parseFloat(this.value);renderDesks();renderHandles();saveLayout();"/>
+      </div>
+    `;
+  }else if(item.type==='tableCircle'){
+    const t=LAYOUT.collabTables[item.idx];
+    title.textContent=t.name;
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">Name:</span>
+        <input class="panel-input" value="${t.name}" onchange="LAYOUT.collabTables[${item.idx}].name=this.value;renderTables();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">CX:</span>
+        <input class="panel-input" value="${t.cx}" onchange="LAYOUT.collabTables[${item.idx}].cx=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">CY:</span>
+        <input class="panel-input" value="${t.cy}" onchange="LAYOUT.collabTables[${item.idx}].cy=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Radius:</span>
+        <input class="panel-input" value="${t.r}" onchange="LAYOUT.collabTables[${item.idx}].r=parseFloat(this.value);renderTables();renderHandles();saveLayout();"/>
+      </div>
+    `;
+  }else if(item.type==='wall'){
+    const w=LAYOUT.corridorWalls[item.idx];
+    title.textContent='Wall';
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">X1:</span>
+        <input class="panel-input" value="${w.x1}" onchange="LAYOUT.corridorWalls[${item.idx}].x1=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y1:</span>
+        <input class="panel-input" value="${w.y1}" onchange="LAYOUT.corridorWalls[${item.idx}].y1=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">X2:</span>
+        <input class="panel-input" value="${w.x2}" onchange="LAYOUT.corridorWalls[${item.idx}].x2=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y2:</span>
+        <input class="panel-input" value="${w.y2}" onchange="LAYOUT.corridorWalls[${item.idx}].y2=parseFloat(this.value);renderCorridorWalls();renderHandles();saveLayout();"/>
+      </div>
+    `;
+  }else if(item.type==='annotation'){
+    const a=LAYOUT.annotations[item.idx];
+    title.textContent='Annotation';
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">Text:</span>
+        <input class="panel-input" value="${a.text}" onchange="LAYOUT.annotations[${item.idx}].text=this.value;renderAnnotations();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">X:</span>
+        <input class="panel-input" value="${a.x}" onchange="LAYOUT.annotations[${item.idx}].x=parseFloat(this.value);renderAnnotations();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y:</span>
+        <input class="panel-input" value="${a.y}" onchange="LAYOUT.annotations[${item.idx}].y=parseFloat(this.value);renderAnnotations();saveLayout();"/>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Size:</span>
+        <input class="panel-input" value="${a.fontSize}" onchange="LAYOUT.annotations[${item.idx}].fontSize=parseFloat(this.value);renderAnnotations();saveLayout();"/>
+      </div>
+    `;
+  }
+}
+
+function isDeskDimmed(seatId){
+  const hcSeat=HC.find(hc=>hc.seat==seatId);
+  if(!searchTerm&&activeDept==='ALL') return false;
+  if(searchTerm){
+    if(!hcSeat) return true;
+    const match=hcSeat.name.toLowerCase().includes(searchTerm.toLowerCase())||hcSeat.title.toLowerCase().includes(searchTerm.toLowerCase());
+    return !match;
+  }
+  if(activeDept!=='ALL'){
+    if(!hcSeat) return activeDept!=='Unassigned';
+    return hcSeat.dept!==activeDept;
+  }
+  return false;
+}
+
+function filterDept(dept){
+  activeDept=dept;
+  renderDesks();
+  updateCount();
+}
+
+function handleSearch(val){
+  searchTerm=val;
+  renderDesks();
+  updateCount();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FLOOR CLICK HANDLER (walls, text, etc.)
+// ══════════════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function(){
+  const svg=document.getElementById('floor-svg');
+  
+  svg.addEventListener('click', function(e){
+    if(e.target.tagName==='svg'||e.target.tagName==='polygon'){
+      clearSelection();
+      showEditPanel(null);
+      afterSelectionChange();
+      
+      if(drawingWall){
+        const [x,y]=svgPt(e);
+        if(!wallStart){
+          wallStart=[gridSnap?snapToGrid(x):x, gridSnap?snapToGrid(y):y];
+        }else{
+          pushHistory();
+          if(!LAYOUT.corridorWalls) LAYOUT.corridorWalls=[];
+          LAYOUT.corridorWalls.push({x1:wallStart[0], y1:wallStart[1], x2:gridSnap?snapToGrid(x):x, y2:gridSnap?snapToGrid(y):y});
+          wallStart=null;
+          renderCorridorWalls();
+          renderHandles();
+          saveLayout();
+        }
+      }
+      
+      if(drawingText){
+        const [x,y]=svgPt(e);
+        const text=prompt('Enter text:');
+        if(text){
+          pushHistory();
+          if(!LAYOUT.annotations) LAYOUT.annotations=[];
+          LAYOUT.annotations.push({id:Date.now(), x:gridSnap?snapToGrid(x):x, y:gridSnap?snapToGrid(y):y, text, fontSize:12});
+          renderAnnotations();
+          saveLayout();
+        }
+      }
+    }
+  });
+  
+  svg.addEventListener('dragover', (e)=>{e.preventDefault(); e.dataTransfer.dropEffect='copy';});
+  svg.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    const data=e.dataTransfer.getData('text/json');
+    if(data){
+      try{
+        const obj=JSON.parse(data);
+        const [x,y]=svgPt(e);
+        if(obj.type==='symbol'){
+          pushHistory();
+          if(!LAYOUT.symbols) LAYOUT.symbols=[];
+          LAYOUT.symbols.push({id:Date.now(), x:gridSnap?snapToGrid(x):x, y:gridSnap?snapToGrid(y):y, svg:obj.svg, name:obj.name, w:20, h:20});
+          renderSymbols();
+          saveLayout();
+        }
+      }catch(err){}
+    }
+  });
+});
+
+function renderSymbols(){
+  const svg=document.getElementById('floor-svg');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ROSTER VIEW
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderRoster(){
+  const tbody=document.querySelector('#rosterTable tbody');
+  tbody.innerHTML='';
+  
+  let data=HC.slice();
+  if(searchTerm){
+    data=data.filter(r=>r.name.toLowerCase().includes(searchTerm.toLowerCase())||r.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  }
+  if(activeDept!=='ALL'){
+    data=data.filter(r=>r.dept===activeDept);
+  }
+  
+  data.sort((a,b)=>{
+    const col=rosterSort.col;
+    let aVal=a[col]||'';
+    let bVal=b[col]||'';
+    if(col==='seat'){
+      aVal=parseInt(aVal)||0;
+      bVal=parseInt(bVal)||0;
+    }
+    const cmp=aVal<bVal?-1:aVal>bVal?1:0;
+    return rosterSort.dir==='asc'?cmp:-cmp;
+  });
+  
+  data.forEach(row=>{
+    const tr=el('tr', {}, tbody);
+    const cells=[row.seat, row.name, row.title, row.dept, row.seatNeeded, row.status];
+    cells.forEach(cell=>{
+      const td=el('td', {}, tr);
+      if(row.status==='OOO'){
+        td.innerHTML=`<span class="status-ooo">${row.status}</span>`;
+      }else if(row.status==='WFH'){
+        td.innerHTML=`<span class="status-wfh">${row.status}</span>`;
+      }else if(row.status==='VISITOR'){
+        td.innerHTML=`<span class="status-visitor">${row.status}</span>`;
+      }else{
+        td.textContent=cell;
+      }
+    });
+  });
+  
+  document.getElementById('itemCount').textContent=data.length+' people';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EVENT LISTENERS & INITIALIZATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function(){
+  initTheme();
+  initSymbolPanel();
+  
+  // View tabs
+  document.querySelectorAll('.view-tab').forEach(tab=>{
+    tab.addEventListener('click', function(){
+      const viewId=this.getAttribute('data-view');
+      currentView=viewId;
+      document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('.view-panel').forEach(p=>p.classList.remove('active'));
+      document.getElementById(viewId+'-view').classList.add('active');
+      if(viewId==='roster') renderRoster();
+    });
+  });
+  
+  // Search
+  document.getElementById('searchInput').addEventListener('input', (e)=>{
+    handleSearch(e.target.value);
+    if(currentView==='roster') renderRoster();
+  });
+  
+  // Dept chips
+  const deptChips=document.getElementById('deptChips');
+  const allChip=el('div', {className:'chip chip-all active'}, deptChips);
+  allChip.textContent='ALL';
+  allChip.addEventListener('click', ()=>{
+    document.querySelectorAll('#deptChips .chip').forEach(c=>c.classList.remove('active'));
+    allChip.classList.add('active');
+    filterDept('ALL');
+    if(currentView==='roster') renderRoster();
+  });
+  
+  Object.keys(DEPTS).forEach(dept=>{
+    const chip=el('div', {className:'chip'}, deptChips);
+    chip.textContent=dept;
+    chip.style.background='rgba(0,143,109,0.1)';
+    chip.style.color='var(--accent)';
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('#deptChips .chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      filterDept(dept);
+      if(currentView==='roster') renderRoster();
+    });
+  });
+  
+  // Edit buttons
+  document.getElementById('btnEdit').addEventListener('click', toggleEditMode);
+  document.getElementById('btnUndo').addEventListener('click', undo);
+  document.getElementById('btnRedo').addEventListener('click', redo);
+  document.getElementById('btnAddDesk').addEventListener('click', addNewDesk);
+  document.getElementById('btnAddTable').addEventListener('click', addNewTable);
+  document.getElementById('btnDrawWall').addEventListener('click', startWallDrawing);
+  document.getElementById('btnAddText').addEventListener('click', startTextMode);
+  document.getElementById('btnGrid').addEventListener('click', toggleGrid);
+  document.getElementById('btnDelete').addEventListener('click', deleteSelected);
+  document.getElementById('btnAlignL').addEventListener('click', ()=>alignSelected('L'));
+  document.getElementById('btnAlignCX').addEventListener('click', ()=>alignSelected('CX'));
+  document.getElementById('btnAlignR').addEventListener('click', ()=>alignSelected('R'));
+  document.getElementById('btnAlignT').addEventListener('click', ()=>alignSelected('T'));
+  document.getElementById('btnAlignCY').addEventListener('click', ()=>alignSelected('CY'));
+  document.getElementById('btnAlignB').addEventListener('click', ()=>alignSelected('B'));
+  document.getElementById('btnZoomIn').addEventListener('click', ()=>zoomStep(1));
+  document.getElementById('btnZoomOut').addEventListener('click', ()=>zoomStep(-1));
+  
+  // Side panel close
+  document.getElementById('panelClose').addEventListener('click', ()=>{
+    document.getElementById('sidePanel').classList.remove('open');
+  });
+  
+  // Roster table sorting
+  document.querySelectorAll('#rosterTable th').forEach(th=>{
+    th.addEventListener('click', function(){
+      const col=this.getAttribute('data-col');
+      if(rosterSort.col===col){
+        rosterSort.dir=rosterSort.dir==='asc'?'desc':'asc';
+      }else{
+        rosterSort.col=col;
+        rosterSort.dir='asc';
+      }
+      renderRoster();
+    });
+  });
+  
+  renderAll();
+  applyVP();
+  updateUndoRedoBtns();
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// JSON EXPORT / IMPORT
+// ══════════════════════════════════════════════════════════════════════════════
+function exportJSON(){
+  const data={
+    version:'floorcraft-v7',
+    exportedAt:new Date().toISOString(),
+    layout:deepClone(LAYOUT),
+    headcount:deepClone(HC),
+  };
+  const blob=new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='floorcraft-layout-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.layout){
+        pushHistory();
+        // Merge layout data
+        Object.assign(LAYOUT, data.layout);
+        if(!LAYOUT.symbols) LAYOUT.symbols=[];
+        if(!LAYOUT.annotations) LAYOUT.annotations=[];
+        saveLayout();
+      }
+      if(data.headcount){
+        HC.length=0;
+        data.headcount.forEach(r=>HC.push(r));
+        saveHC();
+      }
+      renderAll();
+      renderRoster();
+      alert('Layout imported successfully!');
+    }catch(err){
+      alert('Error importing file: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+document.getElementById('btnImportJSON').addEventListener('click', function(){
+  document.getElementById('jsonFileInput').click();
+});
+document.getElementById('jsonFileInput').addEventListener('change', function(e){
+  if(e.target.files[0]) importJSON(e.target.files[0]);
+  e.target.value=''; // reset so same file can be re-imported
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PNG EXPORT
+// ══════════════════════════════════════════════════════════════════════════════
+function exportPNG(){
+  const svgEl=document.getElementById('floor-svg');
+  const vp=document.getElementById('vp');
+  // Temporarily reset viewport for clean export
+  const origTransform=vp.getAttribute('transform');
+  vp.setAttribute('transform','translate(20,20) scale(1)');
+
+  const svgClone=svgEl.cloneNode(true);
+  svgClone.setAttribute('width','820');
+  svgClone.setAttribute('height','740');
+  svgClone.setAttribute('viewBox','0 0 820 740');
+  // Remove handles, guides, rubber band, ghost layers from clone
+  ['handles-layer','guide-layer','rubber-layer','ghost-layer'].forEach(id=>{
+    const layer=svgClone.querySelector('#'+id);
+    if(layer) layer.innerHTML='';
+  });
+
+  const svgData=new XMLSerializer().serializeToString(svgClone);
+  const svgBlob=new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(svgBlob);
+
+  const img=new Image();
+  img.onload=function(){
+    const canvas=document.createElement('canvas');
+    canvas.width=1640; // 2x for retina
+    canvas.height=1480;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim()||'#0A1F1D';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0, 1640, 1480);
+
+    canvas.toBlob(function(blob){
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='floorcraft-'+new Date().toISOString().slice(0,10)+'.png';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    },'image/png');
+    URL.revokeObjectURL(url);
+  };
+  img.src=url;
+
+  // Restore viewport
+  vp.setAttribute('transform', origTransform);
+}
+
+document.getElementById('btnExportPNG').addEventListener('click', exportPNG);
+
+// ══════════════════════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown', function(e){
+  const tag=document.activeElement.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+
+  // ? key → show shortcut overlay
+  if(e.key==='?'||e.key==='/'){
+    const overlay=document.getElementById('shortcutOverlay');
+    overlay.style.display=overlay.style.display==='none'?'flex':'none';
+    e.preventDefault();
+    return;
+  }
+
+  if(e.key==='Escape'){
+    // Close shortcut overlay if open
+    document.getElementById('shortcutOverlay').style.display='none';
+    drawingWall=false;
+    drawingText=false;
+    document.getElementById('btnDrawWall').classList.remove('on');
+    document.getElementById('btnAddText').classList.remove('on');
+    clearSelection();
+    showEditPanel(null);
+    afterSelectionChange();
+  }
+  if(e.key==='Delete'||e.key==='Backspace') deleteSelected();
+  if(e.ctrlKey||e.metaKey){
+    if(e.key==='z'){e.preventDefault(); undo();}
+    if(e.key==='y'){e.preventDefault(); redo();}
+    if(e.key==='s'){e.preventDefault(); saveLayout();}
+  }
+  if(e.key==='e') toggleEditMode();
+  if(e.key==='g') toggleGrid();
+
+  // Arrow keys nudge
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&selection.length>0){
+    e.preventDefault();
+    const step=e.shiftKey?10:1;
+    const dx=e.key==='ArrowLeft'?-step:e.key==='ArrowRight'?step:0;
+    const dy=e.key==='ArrowUp'?-step:e.key==='ArrowDown'?step:0;
+    pushHistory();
+    selection.forEach(s=>{
+      if(s.type==='desk'){const d=LAYOUT.desks[s.idx];d.x+=dx;d.y+=dy;}
+      if(s.type==='tableCircle'){const t=LAYOUT.collabTables[s.idx];t.cx+=dx;t.cy+=dy;}
+      if(s.type==='confRoom'){const r=LAYOUT.confRooms[s.idx];r.x+=dx;r.y+=dy;}
+      if(s.type==='annotation'){const a=LAYOUT.annotations[s.idx];a.x+=dx;a.y+=dy;}
+      if(s.type==='corridorWall'){const w=LAYOUT.corridorWalls[s.idx];w.x1+=dx;w.y1+=dy;w.x2+=dx;w.y2+=dy;}
+    });
+    renderAll();
+  }
+});
+
+</script>
+</body>
+</html>
