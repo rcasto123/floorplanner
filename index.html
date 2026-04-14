@@ -1530,8 +1530,13 @@ function loadOfficeData(officeId){
 }
 
 function saveCurrentOfficeData(){
-  localStorage.setItem(`floorcraft-office-${currentOfficeId}-layout`, JSON.stringify(LAYOUT));
-  localStorage.setItem(`floorcraft-office-${currentOfficeId}-hc`, JSON.stringify(HC));
+  try{
+    localStorage.setItem(`floorcraft-office-${currentOfficeId}-layout`, JSON.stringify(LAYOUT));
+    localStorage.setItem(`floorcraft-office-${currentOfficeId}-hc`, JSON.stringify(HC));
+  }catch(e){
+    console.error('Failed to save office data:', e);
+    alert('Storage full. Export your data to avoid losing changes.');
+  }
 }
 
 function switchOffice(officeId){
@@ -1648,7 +1653,7 @@ function zoomIn(){zoomAt(1.2);}
 function zoomOut(){zoomAt(1/1.2);}
 function fitToContent(){
   const svg=document.getElementById('floor-svg');
-  if(!svg.clientWidth) return;
+  if(!svg.clientWidth||!svg.clientHeight) return;
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   LAYOUT.desks.forEach(d=>{minX=Math.min(minX,d.x);minY=Math.min(minY,d.y);maxX=Math.max(maxX,d.x+d.w);maxY=Math.max(maxY,d.y+d.h);});
   LAYOUT.collabTables.forEach(t=>{minX=Math.min(minX,t.cx-t.r-10);minY=Math.min(minY,t.cy-t.r-10);maxX=Math.max(maxX,t.cx+t.r+10);maxY=Math.max(maxY,t.cy+t.r+10);});
@@ -1657,7 +1662,7 @@ function fitToContent(){
   if(!isFinite(minX)){minX=0;minY=0;maxX=780;maxY=572;}
   const pad=20;
   const cw=maxX-minX+pad*2, ch=maxY-minY+pad*2;
-  vp.scale=Math.min(svg.clientWidth/cw, svg.clientHeight/ch);
+  vp.scale=Math.max(0.05, Math.min(50, Math.min(svg.clientWidth/cw, svg.clientHeight/ch)));
   vp.x=minX-pad;
   vp.y=minY-pad;
   applyVP();
@@ -1749,6 +1754,12 @@ function getSelectedItems(){
 }
 
 function selectItem(type, id, addToSelection){
+  // Exit wall drawing mode when selecting any object
+  if(editMode==='wall'&&tempWallPts.length===0){
+    editMode=null;
+    document.getElementById('btnDrawWall').classList.remove('on');
+    updateFloorCursor();
+  }
   if(addToSelection){
     // Shift+click: toggle in multi-selection
     const idx=multiSelection.findIndex(s=>s.type===type&&s.id===id);
@@ -2002,6 +2013,7 @@ function toggleEditMode(){
   isEditing=!isEditing;
   document.getElementById('editToolbar').classList.toggle('on');
   document.getElementById('btnEdit').classList.toggle('on', isEditing);
+  document.getElementById('btnEdit').textContent=isEditing?'EDIT ON':'EDIT OFF';
   document.getElementById('editBadge').classList.toggle('on', isEditing);
   if(!isEditing){
     clearSelection();
@@ -2064,17 +2076,18 @@ function renderAll(){
   // Grid overlay
   if(gridSnapEnabled){
     const gridRect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    const gvw=svg.clientWidth/vp.scale, gvh=svg.clientHeight/vp.scale;
     gridRect.setAttribute('x', vp.x-100);
     gridRect.setAttribute('y', vp.y-100);
-    gridRect.setAttribute('width', 2000);
-    gridRect.setAttribute('height', 2000);
+    gridRect.setAttribute('width', gvw+200);
+    gridRect.setAttribute('height', gvh+200);
     gridRect.setAttribute('fill', 'url(#grid-pattern)');
     gridRect.setAttribute('pointer-events','none');
     g.appendChild(gridRect);
   }
 
   // Background reference image
-  if(LAYOUT.bgImage&&LAYOUT.bgImage.url){
+  if(LAYOUT.bgImage&&LAYOUT.bgImage.url&&LAYOUT.bgImage.url.trim()!==''){
     const img=document.createElementNS('http://www.w3.org/2000/svg','image');
     img.setAttribute('href', LAYOUT.bgImage.url);
     img.setAttribute('x', LAYOUT.bgImage.x||0);
@@ -2163,7 +2176,7 @@ function renderAll(){
     if(isEditing){
       tblG.addEventListener('mousedown', (e)=>{
         e.stopPropagation();
-        if(e.button!==0) return;
+        if(e.button!==0||editMode==='wall') return;
         selectItem('table', tIdx);
         const startX=e.clientX, startY=e.clientY;
         const origCx=tbl.cx, origCy=tbl.cy;
@@ -2384,7 +2397,7 @@ function renderAll(){
     deskGroup.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('desk', desk.id, e.shiftKey);});
     if(isEditing) deskGroup.addEventListener('mousedown', (e)=>{
       e.stopPropagation();
-      if(e.button!==0) return;
+      if(e.button!==0||editMode==='wall') return;
       selectItem('desk', desk.id);
       const startX=e.clientX, startY=e.clientY;
       const deskX=desk.x, deskY=desk.y;
@@ -2441,7 +2454,7 @@ function renderAll(){
     if(isEditing){
       textG.addEventListener('mousedown', (e)=>{
         e.stopPropagation();
-        if(e.button!==0) return;
+        if(e.button!==0||editMode==='wall') return;
         selectItem('annotation', idx);
         const startX=e.clientX, startY=e.clientY;
         const origX=ann.x, origY=ann.y;
@@ -2477,7 +2490,7 @@ function renderAll(){
     if(isEditing){
       txt.addEventListener('mousedown', (e)=>{
         e.stopPropagation();
-        if(e.button!==0) return;
+        if(e.button!==0||editMode==='wall') return;
         selectItem('symbol', idx);
         const startX=e.clientX, startY=e.clientY;
         const origX=sym.x, origY=sym.y;
@@ -2674,7 +2687,10 @@ function deleteSel(){
     else if(type==='annotation') annIdxs.add(id);
     else if(type==='symbol') symIdxs.add(id);
   });
-  if(deskIds.size) LAYOUT.desks=LAYOUT.desks.filter(d=>!deskIds.has(d.id));
+  if(deskIds.size){
+    LAYOUT.desks=LAYOUT.desks.filter(d=>!deskIds.has(d.id));
+    HC.forEach(r=>{if(deskIds.has(Number(r.seat))) r.seat='';});
+  }
   if(wallIdxs.size) LAYOUT.corridorWalls=LAYOUT.corridorWalls.filter((_,i)=>!wallIdxs.has(i));
   if(tableIdxs.size) LAYOUT.collabTables=LAYOUT.collabTables.filter((_,i)=>!tableIdxs.has(i));
   if(annIdxs.size) LAYOUT.annotations=LAYOUT.annotations.filter((_,i)=>!annIdxs.has(i));
@@ -2736,7 +2752,9 @@ function showEditPanel(type, id){
 
     ['panelX', 'panelY', 'panelW', 'panelH'].forEach(fid=>{
       document.getElementById(fid).addEventListener('change', (e)=>{
-        desk[fid.replace('panel','').toLowerCase()]=parseFloat(e.target.value);
+        const val=parseFloat(e.target.value);
+        if(isNaN(val)) return;
+        desk[fid.replace('panel','').toLowerCase()]=val;
         renderAll();
         saveCurrentOfficeData();
       });
@@ -2780,7 +2798,8 @@ function showEditPanel(type, id){
       renderAll(); saveCurrentOfficeData();
     });
     document.getElementById('panelStroke').addEventListener('change', (e)=>{
-      if(wall.points) wall.strokeWidth=parseFloat(e.target.value);
+      const v=parseFloat(e.target.value);if(isNaN(v))return;
+      if(wall.points) wall.strokeWidth=v;
       renderAll(); saveCurrentOfficeData();
     });
     document.getElementById('panelClosed').addEventListener('change', (e)=>{
@@ -2790,7 +2809,8 @@ function showEditPanel(type, id){
     document.getElementById('panelDupWall').addEventListener('click', ()=>{
       const dup=JSON.parse(JSON.stringify(wall));
       dup.id=Date.now();
-      dup.points=dup.points.map(p=>[p[0]+20,p[1]+20]);
+      if(dup.points) dup.points=dup.points.map(p=>[p[0]+20,p[1]+20]);
+      else {if(dup.x1!==undefined){dup.x1+=20;dup.y1+=20;dup.x2+=20;dup.y2+=20;}}
       if(dup.name) dup.name=dup.name+' copy';
       LAYOUT.corridorWalls.push(dup);
       pushHistory(); saveCurrentOfficeData(); renderAll();
@@ -2820,8 +2840,8 @@ function showEditPanel(type, id){
       <button class="panel-btn" id="panelDeleteTbl" style="margin-top:8px;background:var(--danger,#e55)">Delete Table</button>
     `;
     document.getElementById('panelTblName').addEventListener('change', (e)=>{tbl.name=e.target.value; renderAll(); saveCurrentOfficeData();});
-    document.getElementById('panelTblChairs').addEventListener('change', (e)=>{tbl.chairs=parseInt(e.target.value); renderAll(); saveCurrentOfficeData();});
-    document.getElementById('panelTblR').addEventListener('change', (e)=>{tbl.r=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelTblChairs').addEventListener('change', (e)=>{const v=parseInt(e.target.value);if(isNaN(v))return;tbl.chairs=v; renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelTblR').addEventListener('change', (e)=>{const v=parseFloat(e.target.value);if(isNaN(v))return;tbl.r=v; renderAll(); saveCurrentOfficeData();});
     document.getElementById('panelDeleteTbl').addEventListener('click', ()=>{
       LAYOUT.collabTables=LAYOUT.collabTables.filter((_,i)=>i!==id);
       clearSelection(); showEditPanel(null);
@@ -2846,8 +2866,8 @@ function showEditPanel(type, id){
       <button class="panel-btn" id="panelDeleteAnn" style="margin-top:8px;background:var(--danger,#e55)">Delete</button>
     `;
     document.getElementById('panelAnnText').addEventListener('change', (e)=>{ann.text=e.target.value; renderAll(); saveCurrentOfficeData();});
-    document.getElementById('panelAnnX').addEventListener('change', (e)=>{ann.x=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
-    document.getElementById('panelAnnY').addEventListener('change', (e)=>{ann.y=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelAnnX').addEventListener('change', (e)=>{const v=parseFloat(e.target.value);if(isNaN(v))return;ann.x=v; renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelAnnY').addEventListener('change', (e)=>{const v=parseFloat(e.target.value);if(isNaN(v))return;ann.y=v; renderAll(); saveCurrentOfficeData();});
     document.getElementById('panelDeleteAnn').addEventListener('click', ()=>{
       LAYOUT.annotations=LAYOUT.annotations.filter((_,i)=>i!==id);
       clearSelection(); showEditPanel(null);
@@ -2871,8 +2891,8 @@ function showEditPanel(type, id){
       </div>
       <button class="panel-btn" id="panelDeleteSym" style="margin-top:8px;background:var(--danger,#e55)">Delete</button>
     `;
-    document.getElementById('panelSymX').addEventListener('change', (e)=>{sym.x=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
-    document.getElementById('panelSymY').addEventListener('change', (e)=>{sym.y=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelSymX').addEventListener('change', (e)=>{const v=parseFloat(e.target.value);if(isNaN(v))return;sym.x=v; renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelSymY').addEventListener('change', (e)=>{const v=parseFloat(e.target.value);if(isNaN(v))return;sym.y=v; renderAll(); saveCurrentOfficeData();});
     document.getElementById('panelDeleteSym').addEventListener('click', ()=>{
       LAYOUT.symbols=LAYOUT.symbols.filter((_,i)=>i!==id);
       clearSelection(); showEditPanel(null);
@@ -2905,6 +2925,7 @@ function toggleDept(dept){
   }else{
     activeDepts.add(dept);
   }
+  renderDeptChips(); // re-render chips to update active state
   renderAll();
 }
 
@@ -2936,8 +2957,8 @@ function renderRoster(){
 
   if(currentSearch){
     filtered=filtered.filter(r=>
-      r.name.toLowerCase().includes(currentSearch)||
-      r.title.toLowerCase().includes(currentSearch)
+      (r.name||'').toLowerCase().includes(currentSearch)||
+      (r.title||'').toLowerCase().includes(currentSearch)
     );
   }
 
@@ -2947,9 +2968,9 @@ function renderRoster(){
 
   filtered.sort((a,b)=>{
     let cmp=0;
-    if(rosterSort==='name') cmp=a.name.localeCompare(b.name);
-    else if(rosterSort==='dept') cmp=a.dept.localeCompare(b.dept);
-    else if(rosterSort==='title') cmp=a.title.localeCompare(b.title);
+    if(rosterSort==='name') cmp=(a.name||'').localeCompare(b.name||'');
+    else if(rosterSort==='dept') cmp=(a.dept||'').localeCompare(b.dept||'');
+    else if(rosterSort==='title') cmp=(a.title||'').localeCompare(b.title||'');
     else if(rosterSort==='seat') cmp=String(a.seat).localeCompare(String(b.seat));
     else if(rosterSort==='status') cmp=(a.status||'').localeCompare(b.status||'');
     return cmp*rosterSortDir;
@@ -2957,7 +2978,7 @@ function renderRoster(){
 
   filtered.forEach(row=>{
     const tr=document.createElement('tr');
-    const statusClass=row.status?esc(row.status.toLowerCase()):'';
+    const statusClass=row.status?row.status.toLowerCase().replace(/[^a-z0-9]/g,'-'):'';
     const statusBadge=row.status?`<span class="status-${statusClass}">${esc(row.status)}</span>`:'';
     tr.innerHTML=`
       <td>${esc(row.name)}</td>
@@ -2979,6 +3000,7 @@ function renderRoster(){
 
 function exportJSON(){
   const office=OFFICES.find(o=>o.id===currentOfficeId);
+  if(!office){alert('Office not found. Cannot export.'); return;}
   const data={
     office: {id:currentOfficeId, name:office.name, emoji:office.emoji},
     layout: LAYOUT,
@@ -3012,6 +3034,7 @@ function importJSON(){
         showEditPanel(null);
         history_stack=[];
         historyIdx=-1;
+        pushHistory();
         renderAll();
         saveCurrentOfficeData();
       }catch(err){
@@ -3123,6 +3146,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       showEditPanel(null);
       history_stack=[];
       historyIdx=-1;
+      pushHistory();
       renderAll();
       saveCurrentOfficeData();
     }
@@ -3186,6 +3210,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   // Canvas click — clear selection on empty area
   document.getElementById('floor-svg').addEventListener('click', (e)=>{
+    if(editMode==='wall') return;
     if(isEditing&&!e.shiftKey) clearSelection();
   });
 
@@ -3326,11 +3351,12 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       } else {
         editMode=null;
         clearSelection();
+        updateFloorCursor();
         renderAll();
       }
       document.getElementById('btnDrawWall').classList.remove('on');
     }
-    if(e.code==='Delete'&&!inInput) deleteSel();
+    if((e.code==='Delete'||e.code==='Backspace')&&!inInput) { e.preventDefault(); deleteSel(); }
     if(!inInput&&(e.ctrlKey||e.metaKey)){
       if(e.code==='KeyZ'){e.preventDefault(); undo();}
       if(e.code==='KeyY'){e.preventDefault(); redo();}
@@ -3356,6 +3382,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   document.addEventListener('keyup', (e)=>{
     if(e.code==='Space') isPanning=false;
   });
+
+  window.addEventListener('blur', ()=>{ isPanning=false; });
 
   setupDragDrop();
   renderAll(); // renderAll already calls renderRoster
