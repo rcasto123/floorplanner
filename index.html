@@ -246,19 +246,28 @@ header {
 }
 
 .edit-badge {
-  background: var(--orange);
-  color: #fff;
+  background: var(--surface2);
+  color: var(--text-dim);
   padding: 3px 10px;
   border-radius: 6px;
   font-size: 10px;
   font-weight: 700;
   font-family: var(--font-mono);
-  display: none;
   letter-spacing: 0.4px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: background 0.2s, color 0.2s;
+}
+
+.edit-badge:hover {
+  background: var(--accent-hover);
+  color: #fff;
 }
 
 .edit-badge.on {
-  display: inline;
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
 }
 
 /* ── Tabs ── */
