@@ -737,7 +737,7 @@ header {
 
 /* Desk tooltip */
 .desk-tooltip {
-  font: 8px var(--font);
+  font: 8px var(--font-body);
   fill: var(--text);
   pointer-events: none;
   opacity: 0;
@@ -772,7 +772,7 @@ header {
 }
 
 .room-label-text {
-  font: bold 8px var(--font);
+  font: bold 8px var(--font-body);
   fill: var(--text-muted);
   text-anchor: middle;
   dominant-baseline: middle;
@@ -1541,6 +1541,7 @@ function switchOffice(officeId){
   showEditPanel(null);
   history_stack=[];
   historyIdx=-1;
+  pushHistory(); // initial state for undo
   renderAll();
   updateOfficeDropdown();
 }
@@ -1563,7 +1564,7 @@ function updateOfficeDropdown(){
     })();
     const active=office.id===currentOfficeId?'active':'';
     return `<div class="office-dropdown-item ${active}" data-office-id="${office.id}">
-      <div class="office-item-label">${office.emoji} ${office.name}</div>
+      <div class="office-item-label">${esc(office.emoji)} ${esc(office.name)}</div>
       <div class="office-item-count">${deskCount} desks</div>
     </div>`;
   }).join('');
@@ -1588,6 +1589,7 @@ let historyIdx=-1;
 function pushHistory(){
   history_stack=history_stack.slice(0, historyIdx+1);
   history_stack.push(deepClone(LAYOUT));
+  if(history_stack.length>100) history_stack.shift(); // cap at 100 entries
   historyIdx=history_stack.length-1;
   updateUndoRedoBtns();
 }
@@ -1637,7 +1639,7 @@ function zoomAt(factor){
   const svg=document.getElementById('floor-svg');
   const cx=vp.x+svg.clientWidth/vp.scale/2;
   const cy=vp.y+svg.clientHeight/vp.scale/2;
-  vp.scale*=factor;
+  vp.scale=Math.max(0.05, Math.min(50, vp.scale*factor));
   vp.x=cx-svg.clientWidth/vp.scale/2;
   vp.y=cy-svg.clientHeight/vp.scale/2;
   applyVP();
@@ -1667,7 +1669,6 @@ function fitToContent(){
 
 function dist(a,b){return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);}
 function midpoint(a,b){return {x:(a.x+b.x)/2, y:(a.y+b.y)/2};}
-function sign(n){return n===0?0:n>0?1:-1;}
 function snap(v,grid){return gridSnapEnabled?Math.round(v/grid)*grid:Math.round(v);}
 
 function ptInPoly(pt, poly){
@@ -1684,6 +1685,13 @@ function ptInPoly(pt, poly){
 function getDeptColor(dept){
   const d=DEPTS[dept];
   return d?d.color:'#888';
+}
+
+function esc(s){
+  if(!s) return '';
+  const d=document.createElement('div');
+  d.textContent=String(s);
+  return d.innerHTML;
 }
 
 // ══════════════════════════════════════════════════
@@ -2430,6 +2438,27 @@ function renderAll(){
 
     if(isItemSelected('annotation', idx)) textG.classList.add('multi-sel');
     textG.addEventListener('click', (e)=>{e.stopPropagation(); if(isEditing) selectItem('annotation', idx, e.shiftKey);});
+    if(isEditing){
+      textG.addEventListener('mousedown', (e)=>{
+        e.stopPropagation();
+        if(e.button!==0) return;
+        selectItem('annotation', idx);
+        const startX=e.clientX, startY=e.clientY;
+        const origX=ann.x, origY=ann.y;
+        function onMove(ev){
+          ann.x=snap(origX+(ev.clientX-startX)/vp.scale,20);
+          ann.y=snap(origY+(ev.clientY-startY)/vp.scale,20);
+          renderAll();
+        }
+        function onUp(){
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          pushHistory(); saveCurrentOfficeData();
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
     g.appendChild(textG);
   });
 
@@ -2618,6 +2647,9 @@ function finishWallPolyline(){
 
 function cancelWallDrawing(){
   tempWallPts=[];
+  editMode=null;
+  document.getElementById('btnDrawWall').classList.remove('on');
+  updateFloorCursor();
   renderAll();
 }
 
@@ -2682,7 +2714,7 @@ function showEditPanel(type, id){
       </div>
       <div class="panel-row">
         <span class="panel-label">Name</span>
-        <input class="panel-input" type="text" id="panelName" value="${hcRow?hcRow.name:''}">
+        <input class="panel-input" type="text" id="panelName" value="${esc(hcRow?hcRow.name:'')}">
       </div>
       <div class="panel-row">
         <span class="panel-label">X</span>
@@ -2702,12 +2734,18 @@ function showEditPanel(type, id){
       </div>
     `;
 
-    ['panelX', 'panelY', 'panelW', 'panelH'].forEach(id=>{
-      document.getElementById(id).addEventListener('change', (e)=>{
-        desk[id.replace('panel','').toLowerCase()]=parseFloat(e.target.value);
+    ['panelX', 'panelY', 'panelW', 'panelH'].forEach(fid=>{
+      document.getElementById(fid).addEventListener('change', (e)=>{
+        desk[fid.replace('panel','').toLowerCase()]=parseFloat(e.target.value);
         renderAll();
         saveCurrentOfficeData();
       });
+    });
+    document.getElementById('panelName').addEventListener('change', (e)=>{
+      let row=HC.find(r=>r.seat===String(id));
+      if(!row){row={seat:String(id),name:'',dept:'Unassigned',title:'',status:''};HC.push(row);}
+      row.name=e.target.value;
+      renderAll(); saveCurrentOfficeData();
     });
   } else if(type==='wall'){
     const wall=LAYOUT.corridorWalls[id];
@@ -2720,7 +2758,7 @@ function showEditPanel(type, id){
       </div>
       <div class="panel-row">
         <span class="panel-label">Name</span>
-        <input class="panel-input" type="text" id="panelWallName" value="${wall.name||''}" placeholder="${wall.closed?'Room name':'Wall label'}">
+        <input class="panel-input" type="text" id="panelWallName" value="${esc(wall.name||'')}" placeholder="${wall.closed?'Room name':'Wall label'}">
       </div>
       <div class="panel-row">
         <span class="panel-label">Points</span>
@@ -2769,7 +2807,7 @@ function showEditPanel(type, id){
     content.innerHTML=`
       <div class="panel-row">
         <span class="panel-label">Name</span>
-        <input class="panel-input" type="text" id="panelTblName" value="${tbl.name||''}">
+        <input class="panel-input" type="text" id="panelTblName" value="${esc(tbl.name||'')}">
       </div>
       <div class="panel-row">
         <span class="panel-label">Chairs</span>
@@ -2786,6 +2824,57 @@ function showEditPanel(type, id){
     document.getElementById('panelTblR').addEventListener('change', (e)=>{tbl.r=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
     document.getElementById('panelDeleteTbl').addEventListener('click', ()=>{
       LAYOUT.collabTables=LAYOUT.collabTables.filter((_,i)=>i!==id);
+      clearSelection(); showEditPanel(null);
+      pushHistory(); saveCurrentOfficeData(); renderAll();
+    });
+  } else if(type==='annotation'){
+    const ann=LAYOUT.annotations[id];
+    if(!ann) return;
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">Text</span>
+        <input class="panel-input" type="text" id="panelAnnText" value="${esc(ann.text||'')}">
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">X</span>
+        <input class="panel-input" type="number" id="panelAnnX" value="${ann.x}" step="1">
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y</span>
+        <input class="panel-input" type="number" id="panelAnnY" value="${ann.y}" step="1">
+      </div>
+      <button class="panel-btn" id="panelDeleteAnn" style="margin-top:8px;background:var(--danger,#e55)">Delete</button>
+    `;
+    document.getElementById('panelAnnText').addEventListener('change', (e)=>{ann.text=e.target.value; renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelAnnX').addEventListener('change', (e)=>{ann.x=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelAnnY').addEventListener('change', (e)=>{ann.y=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelDeleteAnn').addEventListener('click', ()=>{
+      LAYOUT.annotations=LAYOUT.annotations.filter((_,i)=>i!==id);
+      clearSelection(); showEditPanel(null);
+      pushHistory(); saveCurrentOfficeData(); renderAll();
+    });
+  } else if(type==='symbol'){
+    const sym=LAYOUT.symbols[id];
+    if(!sym) return;
+    content.innerHTML=`
+      <div class="panel-row">
+        <span class="panel-label">Emoji</span>
+        <span class="panel-value" style="font-size:24px">${esc(sym.emoji)}</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">X</span>
+        <input class="panel-input" type="number" id="panelSymX" value="${sym.x}" step="1">
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">Y</span>
+        <input class="panel-input" type="number" id="panelSymY" value="${sym.y}" step="1">
+      </div>
+      <button class="panel-btn" id="panelDeleteSym" style="margin-top:8px;background:var(--danger,#e55)">Delete</button>
+    `;
+    document.getElementById('panelSymX').addEventListener('change', (e)=>{sym.x=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelSymY').addEventListener('change', (e)=>{sym.y=parseFloat(e.target.value); renderAll(); saveCurrentOfficeData();});
+    document.getElementById('panelDeleteSym').addEventListener('click', ()=>{
+      LAYOUT.symbols=LAYOUT.symbols.filter((_,i)=>i!==id);
       clearSelection(); showEditPanel(null);
       pushHistory(); saveCurrentOfficeData(); renderAll();
     });
@@ -2807,8 +2896,7 @@ let activeDepts=new Set();
 
 function updateSearch(){
   currentSearch=document.getElementById('searchInput').value.toLowerCase();
-  renderAll();
-  renderRoster();
+  renderAll(); // renderAll already calls renderRoster
 }
 
 function toggleDept(dept){
@@ -2818,7 +2906,6 @@ function toggleDept(dept){
     activeDepts.add(dept);
   }
   renderAll();
-  renderRoster();
 }
 
 function renderDeptChips(){
@@ -2870,12 +2957,13 @@ function renderRoster(){
 
   filtered.forEach(row=>{
     const tr=document.createElement('tr');
-    const statusBadge=row.status?`<span class="status-${row.status.toLowerCase()}">${row.status}</span>`:'';
+    const statusClass=row.status?esc(row.status.toLowerCase()):'';
+    const statusBadge=row.status?`<span class="status-${statusClass}">${esc(row.status)}</span>`:'';
     tr.innerHTML=`
-      <td>${row.name}</td>
-      <td>${row.dept}</td>
-      <td>${row.title}</td>
-      <td>${row.seat}</td>
+      <td>${esc(row.name)}</td>
+      <td>${esc(row.dept)}</td>
+      <td>${esc(row.title)}</td>
+      <td>${esc(row.seat)}</td>
       <td>${statusBadge}</td>
     `;
     tbody.appendChild(tr);
@@ -3144,15 +3232,12 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     }
   });
 
-  // Wall drawing — click to add points, dblclick to finish, Escape to cancel
+  // Wall drawing — click adds points immediately, dblclick finishes (removes extra point)
   const svgEl=document.getElementById('floor-svg');
-  let wallClickTimer=null;
-  let wallDblClicked=false;
 
   svgEl.addEventListener('click', (e)=>{
     if(editMode!=='wall') return;
     e.stopPropagation();
-    // Debounce: delay adding point so dblclick can cancel
     const rect=svgEl.getBoundingClientRect();
     let x=(e.clientX-rect.left)/vp.scale+vp.x;
     let y=(e.clientY-rect.top)/vp.scale+vp.y;
@@ -3166,22 +3251,15 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       y=Math.round(last.y+Math.sin(snapped)*len);
     }
     const px=snap(x,20), py=snap(y,20);
-    if(wallClickTimer) clearTimeout(wallClickTimer);
-    wallClickTimer=setTimeout(()=>{
-      if(!wallDblClicked){
-        tempWallPts.push({x:px, y:py});
-        renderAll();
-      }
-      wallDblClicked=false;
-      wallClickTimer=null;
-    }, 200);
+    tempWallPts.push({x:px, y:py});
+    renderAll();
   });
 
   svgEl.addEventListener('dblclick', (e)=>{
     if(editMode!=='wall') return;
     e.stopPropagation();
-    wallDblClicked=true;
-    if(wallClickTimer){ clearTimeout(wallClickTimer); wallClickTimer=null; }
+    // dblclick fires 2 clicks first, so remove the extra point added by the second click
+    if(tempWallPts.length>0) tempWallPts.pop();
     finishWallPolyline();
   });
 
@@ -3211,7 +3289,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   document.getElementById('floor-svg').addEventListener('mousedown', (e)=>{
     if(editMode==='wall') return; // don't pan during wall drawing
-    if(e.button!==1&&!(e.button===0&&e.shiftKey)) return;
+    if(e.button!==1) return; // middle mouse button only (Space+drag handled via keydown)
     isPanning=true;
     panStartX=e.clientX;
     panStartY=e.clientY;
@@ -3220,6 +3298,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   document.addEventListener('mousemove', (e)=>{
     if(!isPanning) return;
+    if(panStartX===null||panStartY===null){panStartX=e.clientX;panStartY=e.clientY;return;}
     const dx=(e.clientX-panStartX)/vp.scale;
     const dy=(e.clientY-panStartY)/vp.scale;
     vp.x-=dx;
@@ -3240,7 +3319,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   // Keyboard — guard against firing in text inputs
   document.addEventListener('keydown', (e)=>{
     const inInput=e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA';
-    if(e.code==='Space'&&!inInput) {e.preventDefault(); isPanning=true; panStartX=e.clientX; panStartY=e.clientY;}
+    if(e.code==='Space'&&!inInput) {e.preventDefault(); isPanning=true; panStartX=null; panStartY=null;}
     if(e.code==='Escape') {
       if(editMode==='wall'&&tempWallPts.length>0){
         cancelWallDrawing();
@@ -3279,8 +3358,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   });
 
   setupDragDrop();
-  renderAll();
-  renderRoster();
+  renderAll(); // renderAll already calls renderRoster
 });
 </script>
 </body>
