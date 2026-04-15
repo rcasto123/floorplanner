@@ -4,45 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FloorCraft by Aircall</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* Dark mode (default) */
-  --bg: #011310;
-  --surface: #002620;
-  --surface2: #216358;
-  --border: #4C7F77;
-  --text: #FAFBFD;
-  --text-dim: #CED8D7;
-  --text-muted: #749E98;
-  --accent: #008F6D;
-  --accent-hover: #056A52;
-  --bright-green: #4CE5C1;
-  --blue: #3F52CF;
-  --teal: #56B0C4;
-  --purple: #8546CC;
-  --orange: #F18424;
-  --pink: #D4418A;
-
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --font-body: system-ui, -apple-system, sans-serif;
-  --font-display: Georgia, serif;
-
-  --canvas-bg: #0A1F1D;
+  --bg: #F8F9FB;
+  --surface: #FFFFFF;
+  --surface2: #F1F3F5;
+  --surface3: #E9ECEF;
+  --border: #E2E5E9;
+  --border-subtle: #ECEEF1;
+  --text: #1A1D21;
+  --text-secondary: #4A5061;
+  --text-dim: #4A5061;
+  --text-muted: #8B919E;
+  --text-inverse: #FFFFFF;
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-light: #EEF2FF;
+  --accent-muted: rgba(79, 70, 229, 0.12);
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
+  --bright-green: #4F46E5;
+  --orange: #F59E0B;
+  --blue: #3B82F6;
+  --teal: #14B8A6;
+  --purple: #8B5CF6;
+  --pink: #EC4899;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --canvas-bg: #F5F6F8;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.04);
 }
 
-html.light-mode {
-  --bg: #FAFBFD;
-  --surface: #FFFFFF;
-  --surface2: #F0F5F3;
-  --border: #E5EAE9;
-  --text: #002620;
-  --text-dim: #3D6B65;
-  --text-muted: #749E98;
-  --accent: #008F6D;
-  --accent-hover: #056A52;
-  --bright-green: #00A67E;
-  --canvas-bg: #F5F8F7;
+html.dark-mode {
+  --bg: #0F1117;
+  --surface: #1A1D27;
+  --surface2: #252832;
+  --surface3: #2F3341;
+  --border: #2F3341;
+  --border-subtle: #252832;
+  --text: #E8EAED;
+  --text-secondary: #9BA1B0;
+  --text-dim: #9BA1B0;
+  --text-muted: #6B7280;
+  --text-inverse: #FFFFFF;
+  --accent: #818CF8;
+  --accent-hover: #6366F1;
+  --accent-light: rgba(129, 140, 248, 0.12);
+  --accent-muted: rgba(129, 140, 248, 0.08);
+  --bright-green: #818CF8;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --info: #60A5FA;
+  --canvas-bg: #14161F;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -52,7 +78,7 @@ html.light-mode {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
   height: 100vh;
@@ -66,13 +92,14 @@ body {
 header {
   background: var(--surface);
   color: var(--text);
-  padding: 8px 18px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   gap: 14px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  box-shadow: var(--shadow-sm);
+  z-index: 100;
   transition: background-color 0.3s, border-color 0.3s;
 }
 
@@ -80,8 +107,9 @@ header {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-display);
-  font-size: 20px;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text);
   letter-spacing: -0.3px;
 }
@@ -94,7 +122,7 @@ header {
 .logo-subtitle {
   font-size: 9px;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   margin-left: 4px;
 }
 
@@ -107,10 +135,11 @@ header {
 .office-dropdown {
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 24px 4px 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  border-radius: 8px;
+  height: 36px;
+  padding: 6px 32px 6px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
   color: var(--text);
   cursor: pointer;
   position: relative;
@@ -140,11 +169,11 @@ header {
   left: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 10px;
   min-width: 250px;
   margin-top: 4px;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .office-dropdown-menu.hidden {
@@ -158,18 +187,18 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 11px;
-  font-family: var(--font-mono);
+  font-size: 13px;
+  font-family: var(--font-sans);
   color: var(--text);
   transition: background 0.15s;
 }
 
 .office-dropdown-item:hover {
-  background: rgba(0, 143, 109, 0.1);
+  background: var(--accent-light);
 }
 
 .office-dropdown-item.active {
-  background: rgba(0, 143, 109, 0.25);
+  background: var(--accent-muted);
 }
 
 .office-item-label {
@@ -190,15 +219,15 @@ header {
 .office-new-item {
   padding: 8px 12px;
   cursor: pointer;
-  font-size: 11px;
-  font-family: var(--font-mono);
-  color: var(--bright-green);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  color: var(--accent);
   text-align: center;
   transition: background 0.15s;
 }
 
 .office-new-item:hover {
-  background: rgba(76, 229, 193, 0.15);
+  background: var(--accent-light);
 }
 
 .stat-pills {
@@ -208,14 +237,14 @@ header {
 }
 
 .stat-pill {
-  background: rgba(0, 143, 109, 0.15);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 11px;
+  background: var(--surface2);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
   font-weight: 600;
-  font-family: var(--font-mono);
-  color: var(--accent);
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
 }
 
 .stat-pill b {
@@ -234,10 +263,10 @@ header {
   border: 1px solid var(--border);
   color: var(--text);
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 12px;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   transition: all 0.2s;
 }
 
@@ -247,13 +276,13 @@ header {
 
 .edit-badge {
   background: var(--surface2);
-  color: var(--text-dim);
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: 0.2px;
   cursor: pointer;
   border: 1px solid var(--border);
   transition: background 0.2s, color 0.2s;
@@ -265,50 +294,54 @@ header {
 }
 
 .edit-badge.on {
-  background: var(--orange);
+  background: var(--accent);
   color: #fff;
-  border-color: var(--orange);
+  border-color: var(--accent);
 }
 
 /* ── Tabs ── */
 .view-tabs {
   display: flex;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
+  padding: 4px 16px;
+  gap: 2px;
   transition: background-color 0.3s;
 }
 
 .view-tab {
-  padding: 8px 20px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: var(--font-mono);
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
   color: var(--text-muted);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  border-radius: 8px;
+  border-bottom: none;
   transition: all 0.15s;
   user-select: none;
 }
 
 .view-tab:hover {
   color: var(--text);
+  background: var(--surface3);
 }
 
 .view-tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ── Controls bar ── */
 .controls {
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
   flex-shrink: 0;
   transition: background-color 0.3s;
@@ -322,12 +355,12 @@ header {
   padding: 6px 28px 6px 10px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: 8px;
+  font-size: 13px;
   width: 190px;
   outline: none;
   color: var(--text);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   transition: border-color 0.2s;
 }
 
@@ -350,10 +383,11 @@ header {
 }
 
 .filter-lbl {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  display: none; /* replaced by filter button */
 }
 
 .chips {
@@ -363,15 +397,15 @@ header {
 }
 
 .chip {
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
   opacity: 0.7;
   transition: all 0.15s;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   background: var(--surface2);
   color: var(--text-muted);
 }
@@ -391,20 +425,29 @@ header {
 }
 
 .cnt {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
 }
 
-/* ── Edit toolbar ── */
+/* ── Edit toolbar (floating) ── */
 #editToolbar {
-  background: rgba(0, 143, 109, 0.08);
-  border-bottom: 1px solid var(--border);
-  padding: 6px 14px;
   display: none;
-  flex-direction: column;
-  gap: 6px;
-  flex-shrink: 0;
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 500;
+  gap: 4px;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
 #editToolbar.on {
@@ -412,41 +455,49 @@ header {
 }
 
 .et-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 4px;
+  flex-wrap: nowrap;
 }
 
 .eb {
-  padding: 4px 10px;
+  height: 32px;
+  padding: 0 10px;
   border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
   cursor: pointer;
-  border: 1px solid var(--border);
-  transition: all 0.15s;
-  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   white-space: nowrap;
-  user-select: none;
-  background: var(--surface);
-  color: var(--text);
+  transition: background 0.15s, color 0.15s;
 }
 
 .eb:hover:not(:disabled) {
   background: var(--surface2);
-  border-color: var(--accent);
+  color: var(--text);
 }
 
 .eb:disabled {
   opacity: 0.35;
-  cursor: not-allowed;
+  cursor: default;
+}
+
+.eb.on, .eb-primary.on {
+  background: var(--accent-light);
+  color: var(--accent);
 }
 
 .eb-primary {
   background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  color: white;
+  border: none;
 }
 
 .eb-primary:hover:not(:disabled) {
@@ -456,43 +507,44 @@ header {
 .eb-warn {
   background: #dc2626;
   color: #fff;
-  border-color: #dc2626;
+  border: none;
 }
 
 .eb-toggle {
-  background: var(--surface);
+  background: transparent;
   color: var(--text-muted);
 }
 
 .eb-toggle.on {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
 }
 
 .et-sep {
   width: 1px;
-  height: 18px;
+  height: 20px;
   background: var(--border);
-  margin: 0 2px;
+  margin: 0 4px;
   flex-shrink: 0;
-}
-
-.et-hint {
-  font-size: 9.5px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  margin-left: 6px;
 }
 
 .key {
   display: inline-block;
-  background: rgba(0, 143, 109, 0.2);
-  color: var(--bright-green);
+  background: var(--accent-light);
+  color: var(--accent);
   border-radius: 3px;
   padding: 1px 4px;
   font-size: 9px;
   font-weight: 700;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono); /* keep mono for keyboard shortcut hints */
 }
 
 #alignRow {
@@ -502,7 +554,7 @@ header {
 }
 
 #alignRow.visible {
-  display: flex;
+  display: inline-flex;
 }
 
 .zoom-ctrl {
@@ -512,8 +564,8 @@ header {
 }
 
 .zoom-pct {
-  font-size: 10px;
-  font-family: var(--font-mono);
+  font-size: 11px;
+  font-family: var(--font-mono); /* keep mono for zoom percentage */
   color: var(--text-muted);
   min-width: 40px;
   text-align: center;
@@ -543,20 +595,46 @@ header {
 }
 
 .symbol-panel {
-  width: 200px;
+  width: 180px;
   background: var(--surface);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: width 0.2s;
+}
+
+.symbol-panel.collapsed {
+  width: 0;
+  border-right: none;
   overflow: hidden;
 }
 
 .symbol-header {
   padding: 10px;
   border-bottom: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 700;
-  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.symbol-collapse-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.symbol-collapse-btn:hover {
+  background: var(--surface2);
   color: var(--text);
 }
 
@@ -571,20 +649,19 @@ header {
 }
 
 .symbol-cat-title {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
   margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
 }
 
 .symbol-item {
-  padding: 6px 4px;
+  padding: 8px;
   background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -609,15 +686,15 @@ header {
 }
 
 .symbol-item-label {
-  font-size: 9px;
-  font-family: var(--font-mono);
+  font-size: 10px;
+  font-family: var(--font-sans);
   color: var(--text-muted);
   text-align: center;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 52px;
+  max-width: 60px;
 }
 
 .floor-wrap {
@@ -658,7 +735,7 @@ header {
 }
 
 .desk-lbl {
-  font: 700 8px var(--font-body);
+  font: 700 8px var(--font-sans);
   fill: #fff;
   pointer-events: none;
   dominant-baseline: middle;
@@ -666,7 +743,7 @@ header {
 }
 
 .desk-num {
-  font: 600 7px var(--font-mono);
+  font: 600 7px var(--font-mono); /* keep mono for seat numbers */
   fill: rgba(255, 255, 255, 0.85);
   pointer-events: none;
   dominant-baseline: middle;
@@ -674,7 +751,7 @@ header {
 }
 
 .room-lbl {
-  font: italic 9px var(--font-body);
+  font: italic 9px var(--font-sans);
   fill: var(--text-muted);
   pointer-events: none;
   text-anchor: middle;
@@ -682,7 +759,7 @@ header {
 }
 
 .zone-lbl {
-  font: 700 9px var(--font-mono);
+  font: 700 9px var(--font-sans);
   fill: #B0C4BE;
   pointer-events: none;
   text-anchor: middle;
@@ -716,7 +793,7 @@ header {
 }
 
 .ghost-desk {
-  fill: rgba(0, 143, 109, 0.15);
+  fill: var(--accent-muted);
   stroke: var(--accent);
   stroke-width: 1.5;
   stroke-dasharray: 5, 3;
@@ -746,7 +823,7 @@ header {
 
 /* Desk tooltip */
 .desk-tooltip {
-  font: 8px var(--font-body);
+  font: 8px var(--font-sans);
   fill: var(--text);
   pointer-events: none;
   opacity: 0;
@@ -781,7 +858,7 @@ header {
 }
 
 .room-label-text {
-  font: bold 8px var(--font-body);
+  font: bold 8px var(--font-sans);
   fill: var(--text-muted);
   text-anchor: middle;
   dominant-baseline: middle;
@@ -832,7 +909,7 @@ header {
 }
 
 .wall-label {
-  font: 9px var(--font-mono);
+  font: 9px var(--font-sans);
   fill: var(--text-muted);
   pointer-events: none;
   text-anchor: middle;
@@ -841,7 +918,7 @@ header {
 
 /* Multi-select marquee */
 .marquee-rect {
-  fill: rgba(0, 143, 109, 0.08);
+  fill: var(--accent-muted);
   stroke: var(--accent);
   stroke-width: 1;
   stroke-dasharray: 4, 3;
@@ -850,29 +927,29 @@ header {
 
 /* Multi-select highlight */
 .desk-g.multi-sel .desk-body {
-  stroke: var(--bright-green) !important;
+  stroke: var(--accent) !important;
   stroke-width: 2.5 !important;
-  filter: drop-shadow(0 0 3px rgba(76, 229, 193, 0.4));
+  filter: drop-shadow(0 0 3px var(--accent-muted));
 }
 
 .wall.multi-sel {
-  stroke: var(--bright-green) !important;
+  stroke: var(--accent) !important;
   stroke-width: 5;
-  filter: drop-shadow(0 0 3px rgba(76, 229, 193, 0.3));
+  filter: drop-shadow(0 0 3px var(--accent-muted));
 }
 
 .collab-g.multi-sel circle:first-child {
-  stroke: var(--bright-green) !important;
+  stroke: var(--accent) !important;
   stroke-width: 1.5;
   stroke-dasharray: 4,3;
 }
 
 .symbol-multi-sel {
-  filter: drop-shadow(0 0 4px rgba(76, 229, 193, 0.6));
+  filter: drop-shadow(0 0 4px var(--accent-muted));
 }
 
 .text-annotation-g.multi-sel rect {
-  stroke: var(--bright-green) !important;
+  stroke: var(--accent) !important;
   stroke-width: 1.5;
 }
 
@@ -890,29 +967,33 @@ header {
   position: fixed;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  min-width: 160px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: var(--shadow-xl);
   z-index: 2000;
-  padding: 4px 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  padding: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
 }
 
 .ctx-menu.hidden { display: none; }
 
 .ctx-item {
-  padding: 6px 14px;
+  padding: 8px 12px;
   cursor: pointer;
   color: var(--text);
   display: flex;
   align-items: center;
   gap: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: var(--font-sans);
   transition: background 0.1s;
 }
 
 .ctx-item:hover {
-  background: rgba(0, 143, 109, 0.15);
+  background: var(--accent-light);
+  color: var(--accent);
 }
 
 .ctx-item.danger { color: #F87171; }
@@ -926,8 +1007,9 @@ header {
 
 .ctx-shortcut {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .text-annotation {
@@ -952,66 +1034,72 @@ header {
 .roster-table {
   flex: 1;
   overflow: auto;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .roster-table table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
 }
 
 .roster-table th {
   background: var(--surface2);
-  color: var(--text);
-  padding: 6px 8px;
+  color: var(--text-secondary);
+  padding: 8px 12px;
   text-align: left;
-  font-weight: 700;
+  font-weight: 600;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   user-select: none;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
 }
 
 .roster-table th:hover {
-  background: var(--border);
+  background: var(--surface3);
 }
 
 .roster-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
   color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
 }
 
 .roster-table tr:hover {
   background: var(--surface2);
 }
 
+.roster-table tr:nth-child(even) td {
+  background: var(--surface2);
+}
+
 .status-ooo {
-  background: rgba(212, 65, 138, 0.2);
+  background: rgba(236, 72, 153, 0.12);
   color: var(--pink);
   padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 9px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
 }
 
 .status-wfh {
-  background: rgba(84, 176, 196, 0.2);
+  background: rgba(20, 184, 166, 0.12);
   color: var(--teal);
   padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 9px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
 }
 
 .status-visitor {
-  background: rgba(241, 132, 36, 0.2);
+  background: rgba(245, 158, 11, 0.12);
   color: var(--orange);
   padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 9px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -1023,6 +1111,7 @@ header {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -1036,16 +1125,16 @@ header {
 .modal {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
   overflow: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
 }
 
 .modal-header {
-  padding: 16px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -1053,7 +1142,7 @@ header {
 }
 
 .modal-title {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 18px;
   font-weight: 700;
   color: var(--text);
@@ -1079,7 +1168,7 @@ header {
 }
 
 .modal-body {
-  padding: 16px;
+  padding: 20px 24px;
 }
 
 .modal-form {
@@ -1095,23 +1184,22 @@ header {
 }
 
 .form-group label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
+  font-family: var(--font-sans);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 8px;
+  padding: 8px 12px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
 }
 
 .form-group input:focus,
@@ -1119,7 +1207,7 @@ header {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(0, 143, 109, 0.15);
+  box-shadow: 0 0 0 2px var(--accent-muted);
 }
 
 .modal-footer {
@@ -1131,12 +1219,12 @@ header {
 }
 
 .btn {
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: 1px solid var(--border);
-  font-size: 11px;
-  font-weight: 600;
-  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all 0.2s;
   background: var(--surface2);
@@ -1168,15 +1256,17 @@ header {
   position: absolute;
   right: 0;
   top: 0;
-  width: 320px;
+  width: 300px;
   height: 100%;
   background: var(--surface);
   border-left: 1px solid var(--border);
-  transform: translateX(320px);
+  border-radius: 12px 0 0 12px;
+  transform: translateX(300px);
   transition: transform 0.3s;
   overflow-y: auto;
   z-index: 100;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-xl);
+  font-family: var(--font-sans);
 }
 
 #sidePanel.open {
@@ -1192,7 +1282,7 @@ header {
 }
 
 .panel-title {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
@@ -1220,7 +1310,9 @@ header {
 
 .panel-label {
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
   min-width: 70px;
 }
 
@@ -1232,28 +1324,48 @@ header {
 
 .panel-input {
   flex: 1;
-  padding: 4px 6px;
+  padding: 6px 8px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  height: 32px;
+}
+
+.panel-btn {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface2);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.panel-btn:hover {
+  background: var(--surface3);
 }
 
 /* ── Scrollbars ── */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -1267,10 +1379,67 @@ kbd {
   border-radius: 4px;
   padding: 1px 6px;
   font-size: 11px;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono); /* keep mono for keyboard shortcuts */
   color: var(--text);
   min-width: 24px;
   text-align: center;
+}
+
+/* ── Filter dropdown ── */
+.filter-wrap {
+  position: relative;
+}
+
+.filter-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  background: var(--surface3);
+}
+
+.filter-btn .filter-badge {
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: var(--shadow-lg);
+  z-index: 600;
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 500px;
+  margin-top: 4px;
+}
+
+.filter-dropdown.open {
+  display: flex;
 }
 
 </style>
@@ -1280,9 +1449,9 @@ kbd {
 <header>
   <div class="logo">
     <svg class="aircall-logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <rect x="15" y="30" width="20" height="40" rx="4" fill="#008F6D"/>
-      <rect x="40" y="20" width="20" height="50" rx="4" fill="#008F6D"/>
-      <rect x="65" y="35" width="20" height="35" rx="4" fill="#008F6D"/>
+      <rect x="15" y="30" width="20" height="40" rx="4" fill="#4F46E5"/>
+      <rect x="40" y="20" width="20" height="50" rx="4" fill="#4F46E5"/>
+      <rect x="65" y="35" width="20" height="35" rx="4" fill="#4F46E5"/>
     </svg>
     Floor<em>Craft</em><span class="logo-subtitle">by Aircall</span>
   </div>
@@ -1317,61 +1486,63 @@ kbd {
     <input type="text" id="searchInput" placeholder="Search name..." />
     <span class="s-icon">🔍</span>
   </div>
-  <span class="filter-lbl">DEPT</span>
-  <div class="chips" id="deptChips"></div>
+  <div class="filter-wrap">
+    <button class="filter-btn" id="btnFilter">Filter</button>
+    <div class="filter-dropdown" id="filterDropdown">
+      <div class="chips" id="deptChips"></div>
+    </div>
+  </div>
   <div class="spacer"></div>
   <span class="cnt" id="itemCount">0 items</span>
 </div>
 
-<div id="editToolbar">
-  <div class="et-row">
-    <button class="eb eb-primary" id="btnEdit">EDIT ON</button>
-    <button class="eb eb-neutral" id="btnUndo" disabled>↶ Undo</button>
-    <button class="eb eb-neutral" id="btnRedo" disabled>↷ Redo</button>
-    <button class="eb eb-neutral" id="btnAddDesk">+ Desk</button>
-    <button class="eb eb-neutral" id="btnAddTable">⬤ Table</button>
-    <button class="eb eb-neutral" id="btnDrawWall">✏ Wall</button>
-    <button class="eb eb-neutral" id="btnAddText">T Text</button>
-    <button class="eb eb-neutral" id="btnDeleteSel">🗑 Delete</button>
-    <button class="eb eb-neutral" id="btnVertexMode">⬟ Edit Vertex</button>
-    <div id="alignRow">
-      <button class="eb" id="btnAlignL" title="Align Left">⬅</button>
-      <button class="eb" id="btnAlignH" title="Align Horizontal">↔</button>
-      <button class="eb" id="btnAlignR" title="Align Right">➡</button>
-      <span class="et-sep"></span>
-      <button class="eb" id="btnAlignT" title="Align Top">⬆</button>
-      <button class="eb" id="btnAlignV" title="Align Vertical">↕</button>
-      <button class="eb" id="btnAlignB" title="Align Bottom">⬇</button>
-      <span class="et-sep"></span>
-      <button class="eb" id="btnDistH" title="Distribute Horizontally">⇔</button>
-      <button class="eb" id="btnDistV" title="Distribute Vertically">⇕</button>
-      <span class="et-sep"></span>
-      <label style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-left:4px;"><input type="checkbox" id="gridSnap" /> GRID</label>
-    </div>
-    <span class="et-sep"></span>
-    <span class="zoom-ctrl">
-      <button class="eb" id="btnZoomOut" style="padding:4px 8px;">−</button>
-      <div class="zoom-pct" id="zoomPct">100%</div>
-      <button class="eb" id="btnZoomIn" style="padding:4px 8px;">+</button>
-    </span>
-    <button class="eb eb-neutral" id="btnFitContent" title="Fit to content">⊞ Fit</button>
-    <button class="eb eb-neutral" id="btnResetLayout">Reset</button>
-    <button class="eb eb-neutral" id="btnExportJSON">Export</button>
-    <button class="eb eb-neutral" id="btnImportJSON">Import</button>
-  </div>
-  <div class="et-row">
-    <span class="et-hint">TIP: <span class="key">Space</span>+drag pan. <span class="key">Scroll</span> zoom. <span class="key">E</span> edit. <span class="key">Shift</span>+click multi-select. <span class="key">Ctrl+C/V/D</span> copy/paste/dup. <span class="key">Ctrl+A</span> select all. <span class="key">Dbl-click</span> finish wall.</span>
-  </div>
-</div>
-
 <div class="app-body">
   <div id="map-view" class="view-panel active">
-    <div class="symbol-panel">
-      <div class="symbol-header">Symbols</div>
+    <div class="symbol-panel" id="symbolPanel">
+      <div class="symbol-header">Symbols <button class="symbol-collapse-btn" id="symbolCollapseBtn" title="Collapse panel">&laquo;</button></div>
       <div class="symbol-list" id="symbolList"></div>
     </div>
     <div class="floor-wrap">
       <svg id="floor-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="editToolbar">
+        <button class="eb eb-primary" id="btnEdit" title="Toggle edit mode (E)">EDIT ON</button>
+        <div class="toolbar-sep"></div>
+        <button class="eb" id="btnAddDesk" title="Add a new desk">+ Desk</button>
+        <button class="eb" id="btnAddTable" title="Add a collaboration table">Table</button>
+        <button class="eb" id="btnDrawWall" title="Draw walls/partitions">Wall</button>
+        <button class="eb" id="btnAddText" title="Add text annotation">T Text</button>
+        <div class="toolbar-sep"></div>
+        <button class="eb" id="btnDeleteSel" title="Delete selected items (Del)">Delete</button>
+        <div class="toolbar-sep"></div>
+        <button class="eb" id="btnUndo" disabled title="Undo (Ctrl+Z)">Undo</button>
+        <button class="eb" id="btnRedo" disabled title="Redo (Ctrl+Y)">Redo</button>
+        <div class="toolbar-sep"></div>
+        <button class="eb" id="btnVertexMode" title="Edit wall vertices">Vertex</button>
+        <label style="font-size:12px;color:var(--text-muted);font-family:var(--font-sans);display:inline-flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="gridSnap" /> Grid</label>
+        <div id="alignRow">
+          <button class="eb" id="btnAlignL" title="Align Left">⬅</button>
+          <button class="eb" id="btnAlignH" title="Align Horizontal">↔</button>
+          <button class="eb" id="btnAlignR" title="Align Right">➡</button>
+          <span class="et-sep"></span>
+          <button class="eb" id="btnAlignT" title="Align Top">⬆</button>
+          <button class="eb" id="btnAlignV" title="Align Vertical">↕</button>
+          <button class="eb" id="btnAlignB" title="Align Bottom">⬇</button>
+          <span class="et-sep"></span>
+          <button class="eb" id="btnDistH" title="Distribute Horizontally">⇔</button>
+          <button class="eb" id="btnDistV" title="Distribute Vertically">⇕</button>
+        </div>
+        <div class="toolbar-sep"></div>
+        <span class="zoom-ctrl">
+          <button class="eb" id="btnZoomOut" style="padding:0 8px;">−</button>
+          <div class="zoom-pct" id="zoomPct">100%</div>
+          <button class="eb" id="btnZoomIn" style="padding:0 8px;">+</button>
+        </span>
+        <button class="eb" id="btnFitContent" title="Fit to content">Fit</button>
+        <div class="toolbar-sep"></div>
+        <button class="eb" id="btnResetLayout" title="Reset layout to blank">Reset</button>
+        <button class="eb" id="btnExportJSON" title="Export layout as JSON">Export</button>
+        <button class="eb" id="btnImportJSON" title="Import layout from JSON">Import</button>
+      </div>
       <div id="sidePanel">
         <div class="panel-header">
           <div class="panel-title" id="panelTitle"></div>
@@ -1713,22 +1884,22 @@ function esc(s){
 // ══════════════════════════════════════════════════
 
 function toggleTheme(){
-  const isDark=!document.documentElement.classList.contains('light-mode');
+  const isDark=document.documentElement.classList.contains('dark-mode');
   if(isDark){
-    document.documentElement.classList.add('light-mode');
+    document.documentElement.classList.remove('dark-mode');
     localStorage.setItem('floorcraft-theme', 'light');
-    document.getElementById('themeToggle').textContent='☀️';
-  }else{
-    document.documentElement.classList.remove('light-mode');
-    localStorage.setItem('floorcraft-theme', 'dark');
     document.getElementById('themeToggle').textContent='🌙';
+  }else{
+    document.documentElement.classList.add('dark-mode');
+    localStorage.setItem('floorcraft-theme', 'dark');
+    document.getElementById('themeToggle').textContent='☀️';
   }
 }
 
 function initTheme(){
-  const theme=localStorage.getItem('floorcraft-theme')||'dark';
-  if(theme==='light'){
-    document.documentElement.classList.add('light-mode');
+  const theme=localStorage.getItem('floorcraft-theme')||'light';
+  if(theme==='dark'){
+    document.documentElement.classList.add('dark-mode');
     document.getElementById('themeToggle').textContent='☀️';
   }else{
     document.getElementById('themeToggle').textContent='🌙';
@@ -2062,7 +2233,7 @@ function renderAll(){
   gridLine1.setAttribute('fill','none');
   gridLine1.setAttribute('stroke','var(--border)');
   gridLine1.setAttribute('stroke-width','0.3');
-  gridLine1.setAttribute('opacity','0.5');
+  gridLine1.setAttribute('opacity','0.3');
   gridPat.appendChild(gridLine1);
   defs.appendChild(gridPat);
 
@@ -2112,7 +2283,7 @@ function renderAll(){
   if(LAYOUT.roomPoints&&LAYOUT.roomPoints.length>0){
     const roomPoly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
     roomPoly.setAttribute('points', LAYOUT.roomPoints.map(p=>`${p[0]},${p[1]}`).join(' '));
-    const isDark=!document.documentElement.classList.contains('light-mode');
+    const isDark=document.documentElement.classList.contains('dark-mode');
     const fillColor=isDark?'rgba(200,220,220,0.05)':'rgba(0,38,32,0.04)';
     roomPoly.setAttribute('fill', fillColor);
     roomPoly.setAttribute('stroke', isDark?'#666':'#CED8D7');
@@ -2155,7 +2326,7 @@ function renderAll(){
     const hitCircle=document.createElementNS('http://www.w3.org/2000/svg','circle');
     hitCircle.setAttribute('cx', tbl.cx); hitCircle.setAttribute('cy', tbl.cy);
     hitCircle.setAttribute('r', seatDist+chairR+2);
-    hitCircle.setAttribute('fill', (isSel||isMultiSel)?'rgba(76,229,193,0.12)':'transparent');
+    hitCircle.setAttribute('fill', (isSel||isMultiSel)?'rgba(79,70,229,0.1)':'transparent');
     hitCircle.setAttribute('stroke', (isSel||isMultiSel)?'var(--accent)':'none');
     hitCircle.setAttribute('stroke-width', '1.5');
     hitCircle.setAttribute('stroke-dasharray', (isSel||isMultiSel)?'4,3':'none');
@@ -2361,7 +2532,7 @@ function renderAll(){
     rect.setAttribute('fill', deptColor);
     rect.setAttribute('stroke', '#fff');
     rect.setAttribute('stroke-width', '1');
-    rect.setAttribute('rx', '2');
+    rect.setAttribute('rx', '4');
 
     deskGroup.appendChild(rect);
 
@@ -2443,8 +2614,8 @@ function renderAll(){
     bg.setAttribute('y', ann.y-8);
     bg.setAttribute('width', ann.w||40);
     bg.setAttribute('height', 12);
-    bg.setAttribute('fill', 'rgba(76, 229, 193, 0.15)');
-    bg.setAttribute('stroke', '#4CE5C1');
+    bg.setAttribute('fill', 'rgba(79, 70, 229, 0.1)');
+    bg.setAttribute('stroke', 'var(--accent)');
     bg.setAttribute('stroke-width', '0.5');
     bg.setAttribute('rx', '2');
     textG.appendChild(bg);
@@ -2454,7 +2625,7 @@ function renderAll(){
     txt.setAttribute('y', ann.y);
     txt.setAttribute('class', 'text-annotation');
     txt.setAttribute('font-size', '7');
-    txt.setAttribute('fill', '#4CE5C1');
+    txt.setAttribute('fill', 'var(--accent)');
     txt.textContent=ann.text;
     textG.appendChild(txt);
 
@@ -2541,7 +2712,7 @@ function renderAll(){
     const badge=document.createElementNS('http://www.w3.org/2000/svg','text');
     badge.setAttribute('x', vp.x+10); badge.setAttribute('y', vp.y+15);
     badge.setAttribute('font-size','10'); badge.setAttribute('fill','var(--bright-green)');
-    badge.setAttribute('font-family','var(--font-mono)'); badge.setAttribute('pointer-events','none');
+    badge.setAttribute('font-family','var(--font-sans)'); badge.setAttribute('pointer-events','none');
     badge.textContent=`${multiSelection.length} selected`;
     g.appendChild(badge);
   }
@@ -2949,6 +3120,12 @@ function renderDeptChips(){
     chip.addEventListener('click', ()=>toggleDept(dept));
     container.appendChild(chip);
   });
+  // Update filter button badge
+  const filterBtn=document.getElementById('btnFilter');
+  if(filterBtn){
+    const count=activeDepts.size;
+    filterBtn.innerHTML=count>0?`Filter <span class="filter-badge">${count}</span>`:'Filter';
+  }
 }
 
 // ══════════════════════════════════════════════════
@@ -3119,6 +3296,24 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   });
 
   updateOfficeDropdown();
+
+  // Filter dropdown
+  const filterBtn=document.getElementById('btnFilter');
+  const filterDropdown=document.getElementById('filterDropdown');
+  filterBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    filterDropdown.classList.toggle('open');
+  });
+  filterDropdown.addEventListener('click', (e)=>e.stopPropagation());
+  document.addEventListener('click', ()=>filterDropdown.classList.remove('open'));
+
+  // Symbol panel collapse
+  document.getElementById('symbolCollapseBtn').addEventListener('click', ()=>{
+    const panel=document.getElementById('symbolPanel');
+    const btn=document.getElementById('symbolCollapseBtn');
+    panel.classList.toggle('collapsed');
+    btn.innerHTML=panel.classList.contains('collapsed')?'&raquo;':'&laquo;';
+  });
 
   // Views
   document.querySelectorAll('.view-tab').forEach(tab=>{
