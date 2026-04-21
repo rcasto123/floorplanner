@@ -1,4 +1,4 @@
-# FloorCraft by Aircall
+> **Archived.** This was an early prototype. See [Floorcraft](https://github.com/rcasto123/Floorcraft) for the current version.# FloorCraft by Aircall
 
 Interactive office floor planner and seating management tool.
 
